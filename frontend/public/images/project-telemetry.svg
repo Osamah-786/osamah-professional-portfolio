@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" fill="none">
+  <rect width="1200" height="760" fill="#191b20"/>
+  <path d="M0 84h1200M0 676h1200M76 0v760M1124 0v760" stroke="#35363c"/>
+  <rect x="112" y="120" width="976" height="520" fill="#111317" stroke="#35363c"/>
+  <path d="M160 200h880M160 280h880M160 360h880M160 440h880M160 520h880" stroke="#292b31"/>
+  <path d="M240 160v432M400 160v432M560 160v432M720 160v432M880 160v432" stroke="#292b31"/>
+  <path d="m160 468 80-38 80 12 80-88 80 18 80-34 80 52 80-142 80 78 80-24 80 36" stroke="#d99b65" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="m160 540 80-18 80 8 80-24 80 12 80-20 80 20 80-25 80 14 80-8 80 12" stroke="#c7c2ba" stroke-opacity=".72" stroke-width="3"/>
+  <circle cx="720" cy="328" r="8" fill="#d99b65"/>
+  <path d="M160 592h880" stroke="#4a4b50"/>
+  <text x="160" y="164" fill="#96918a" font-family="monospace" font-size="14" letter-spacing="2">SIGNAL REVIEW / SAMPLE VISUAL</text>
+  <text x="160" y="622" fill="#96918a" font-family="monospace" font-size="12" letter-spacing="1">TIME →</text>
+</svg>

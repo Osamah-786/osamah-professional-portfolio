@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+SQLAlchemy
+PyMySQL
+argon2-cffi
+PyJWT
+cloudinary
+python-multipart

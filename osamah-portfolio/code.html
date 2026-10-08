@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#111317;color:#e2e2e8;}body{overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary-fixed-dim": "#fdb87e", "on-primary-container": "#623505", "secondary": "#ffb68c", "on-tertiary-fixed": "#001f26", "surface-variant": "#333539", "on-tertiary-fixed-variant": "#004e5d", "surface-container-highest": "#333539", "on-secondary": "#532200", "primary-fixed": "#ffdcc2", "secondary-container": "#964400", "on-tertiary-container": "#004755", "secondary-fixed": "#ffdbc9", "inverse-surface": "#e2e2e8", "on-background": "#e2e2e8", "surface-dim": "#111317", "on-surface-variant": "#d6c3b6", "surface-container-low": "#1a1c20", "on-surface": "#e2e2e8", "primary-container": "#e09f67", "on-secondary-fixed-variant": "#753400", "surface-container-high": "#282a2e", "tertiary-container": "#71b7cb", "primary": "#ffba7f", "surface-container": "#1e2024", "surface-tint": "#fdb87e", "error": "#ffb4ab", "secondary-fixed-dim": "#ffb68c", "inverse-primary": "#865221", "on-error": "#690005", "on-secondary-fixed": "#321200", "background": "#111317", "tertiary-fixed": "#aeecff", "tertiary-fixed-dim": "#8bd1e5", "inverse-on-surface": "#2f3035", "on-primary-fixed": "#2e1500", "outline": "#9e8e81", "surface-container-lowest": "#0c0e12", "outline-variant": "#51443a", "surface": "#111317", "surface-bright": "#37393e", "on-primary": "#4c2700", "on-error-container": "#ffdad6", "tertiary": "#8dd3e7", "error-container": "#93000a", "on-primary-fixed-variant": "#6a3b0b", "on-secondary-container": "#ffcaac", "on-tertiary": "#003641" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "gutter-desktop": "2.5rem", "space-sm": "0.5rem", "space-md": "1rem", "space-xl": "3rem", "margin-tablet": "2.5rem", "margin": "1.25rem", "margin-desktop": "4rem", "space-xs": "0.25rem", "gutter": "1.5rem", "space-lg": "1.5rem" }, fontFamily: { "display-hero-mobile": ["Inter"], "code-block": ["JetBrains Mono"], "headline-md": ["Inter"], "body-sm": ["Inter"], "meta-label": ["JetBrains Mono"], "body-md": ["Inter"], "display-hero": ["Inter"], "headline-sm": ["Inter"], "meta-index": ["JetBrains Mono"], "headline-lg-mobile": ["Inter"], "body-lg": ["Inter"], "headline-lg": ["Inter"] }, fontSize: { "display-hero-mobile": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.025em", "fontWeight": "600" }], "code-block": ["13px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "500" }], "body-sm": ["13px", { "lineHeight": "20px", "letterSpacing": "0.005em", "fontWeight": "400" }], "meta-label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }], "body-md": ["15px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "meta-index": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "500" }], "body-lg": ["18px", { "lineHeight": "30px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "500" }] } } } };</script></head><body class="bg-surface text-on-surface font-body-md flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span><a class="flex items-baseline gap-space-xs tracking-tight" data-path="overview" href="#"><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">OSAMAH</span><span class="font-meta-label text-meta-label text-on-surface-variant">/ ENG</span></a></div><div class="flex items-center gap-space-sm"><a class="h-9 px-space-md inline-flex items-center justify-center font-meta-label text-meta-label text-primary bg-surface-container-low hover:bg-surface-container rounded transition-colors" data-path="contact" href="#"><span class="material-symbols-outlined text-[15px] mr-1">mail</span><span>CONTACT</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface"><div class="flex flex-col w-full text-on-surface">
+<!-- 00 // RUNNING INDEX BAR -->
+<div class="w-full bg-surface-container-lowest px-margin py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm overflow-x-auto no-scrollbar font-meta-index text-meta-index text-on-surface-variant">
+<span class="text-primary font-semibold">01</span><span>AI/ML</span>
+<span class="text-outline-variant font-light">/</span>
+<span class="text-primary font-semibold">02</span><span>GENAI</span>
+<span class="text-outline-variant font-light">/</span>
+<span class="text-primary font-semibold">03</span><span>BACKEND</span>
+<span class="text-outline-variant font-light">/</span>
+<span class="text-primary font-semibold">04</span><span>SYSTEMS</span>
+</div>
+<div class="hidden sm:flex items-center gap-space-xs font-meta-index text-meta-index text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>LATENCY: 14MS</span>
+</div>
+</div>
+<!-- 01 // HERO SECTION -->
+<section class="px-margin pt-space-lg pb-space-xl flex flex-col gap-space-lg">
+<!-- Editorial Headline & Spec -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs font-meta-label text-meta-label text-primary">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>INDEX // 00_OVERVIEW</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight font-semibold pt-space-xs">
+        Building intelligent systems that solve real problems.
+      </h1>
+<p class="font-meta-label text-meta-label text-primary pt-space-xs tracking-wider uppercase">
+        Computer Science • AI/ML • GenAI • Software Engineering
+      </p>
+</div>
+<!-- Editorial Intro Paragraph -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+      I engineer resilient AI/ML architectures and performant backend systems—bridging autonomous machine intelligence, distributed streaming data, and mission-critical production pipelines.
+    </p>
+<!-- CTAs -->
+<div class="flex flex-wrap items-center gap-space-sm pt-space-xs">
+<a class="h-10 px-space-md inline-flex items-center justify-center font-meta-label text-meta-label text-on-primary bg-primary hover:bg-primary-container rounded transition-colors duration-150" href="#work">
+<span>VIEW SELECTED WORK</span>
+<span class="material-symbols-outlined text-[15px] ml-1">arrow_downward</span>
+</a>
+<a class="h-10 px-space-md inline-flex items-center justify-center font-meta-label text-meta-label text-on-surface bg-surface-container-high hover:bg-surface-container-highest rounded transition-colors duration-150" href="#resume">
+<span class="material-symbols-outlined text-[15px] mr-1">download</span>
+<span>RESUME</span>
+</a>
+</div>
+<!-- Framing Portrait Container -->
+<div class="mt-space-sm flex flex-col bg-surface-container-low rounded p-space-xs">
+<div class="relative w-full aspect-[4/5] bg-surface-container-high overflow-hidden rounded">
+<img alt="Osamah - Software &amp; ML Engineer" class="w-full h-full object-cover grayscale contrast-110 hover:grayscale-0 transition-all duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDebsCNQAy70oOFNNzsi3vtM5o92cA-8dZIz4k0fJ6DoheblsPwOwFMo6fvZSYWoO3aNZjOuCbA2rsWhhtPfdyPh9Zg-ZzRf_mi5p8HBCY3SBGjdBzUypK0oDt56BqUe-GZM8y2D2r-IncYHr7JR5kfUsI52rNsPzR9P0Em8OWMGWVNbXr38WU5Yy4MnLDUiqN2bcgBTG3A16bXBoXtfe1tjd9rr3de_oknwbpmUrs"/>
+<div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/70 to-transparent p-space-md flex flex-col justify-end">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Osamah</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-primary uppercase">AVAIL // 2026</span>
+</div>
+<span class="font-meta-label text-meta-label text-on-surface-variant pt-0.5">Software &amp; ML Engineer • Distributed Pipelines</span>
+</div>
+</div>
+<div class="flex items-center justify-between px-space-sm py-space-xs text-on-surface-variant font-meta-index text-meta-index">
+<span>FRAME ARCHIVE: #01-A</span>
+<span>LAT: 40.7128° N, 74.0060° W</span>
+</div>
+</div>
+</section>
+<!-- DIVIDER -->
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- 02 // SELECTED WORK -->
+<section class="px-margin py-space-xl flex flex-col gap-space-lg" id="work">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-meta-index text-meta-index text-primary uppercase">01 // SELECTED WORK</span>
+<span class="font-meta-index text-meta-index text-on-surface-variant">3 SYSTEMS DEPLOYED</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        A selection of high-availability systems, model architectures, and telemetry products I've engineered.
+      </p>
+</div>
+<!-- WORK 01: HERO WORK (RootCause AI) -->
+<div class="bg-surface-container-low rounded overflow-hidden flex flex-col">
+<!-- Media Header -->
+<div class="relative w-full aspect-video bg-surface-container-lowest overflow-hidden">
+<img alt="Neural network telemetry and loss curves monitor" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3jnc_HgU0knioSaQfjFUrNiJKfxmpaix2g8niyxl9DzXtcKA-vLHt0CSt7rySckA3DALmkIMDIvceba-OADH-ApVXM1nNw4NkW8gXAdYxcnFourkXRdDfV3CEvKA6fD1ZJIOD-MGvPUORYbcLeEs9oiYk5kxa4svRI6myMy1XA1_Whs4QFCDIIt_-Vt1e-ee_373UhpuCaVvPVbsm-r8RzkTX30KFvjZUN5OzO_I"/>
+<div class="absolute top-2 left-2 bg-surface-container-lowest/90 px-space-xs py-0.5 rounded flex items-center gap-1 font-meta-index text-meta-index text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>CLUSTER: GOLIATH-7B ONLINE</span>
+</div>
+</div>
+<!-- Content -->
+<div class="p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between font-meta-index text-meta-index text-on-surface-variant">
+<span>01 / FLAGSHIP SYSTEM</span>
+<span class="text-primary font-mono">&lt; 14MS LATENCY</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+          RootCause AI — Industrial Downtime Prediction
+        </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Autonomous anomaly detection engine analyzing multi-sensor telemetry streams with sub-14ms inference latency across distributed plant floor operations.
+        </p>
+<!-- Tech Tags -->
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Time-Series</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">PyTorch</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">XGBoost</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">FastAPI</span>
+</div>
+<!-- Links -->
+<div class="flex items-center gap-space-md pt-space-sm font-meta-label text-meta-label">
+<a class="inline-flex items-center text-primary hover:underline underline-offset-4" href="#">
+<span>Case Study</span>
+<span class="material-symbols-outlined text-[14px] ml-0.5">arrow_forward</span>
+</a>
+<a class="inline-flex items-center text-on-surface-variant hover:text-on-surface" href="#">
+<span>GitHub</span>
+<span class="material-symbols-outlined text-[14px] ml-0.5">north_east</span>
+</a>
+</div>
+</div>
+</div>
+<!-- WORK 02: Goliath-7B -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between font-meta-index text-meta-index text-on-surface-variant">
+<span>02 / RETRIEVAL ARCHITECTURE</span>
+<span class="text-primary font-mono">HYBRID RAG</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+        Goliath-7B Distributed RAG Pipeline
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Low-latency enterprise retrieval system with hybrid vector reranking, cross-encoder relevance checking, and verifiable citation tracing for dense technical knowledge bases.
+      </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">GenAI</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">LangGraph</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">vLLM</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Redis</span>
+</div>
+<div class="flex items-center gap-space-md pt-space-sm font-meta-label text-meta-label">
+<a class="inline-flex items-center text-primary hover:underline underline-offset-4" href="#">
+<span>System Spec</span>
+<span class="material-symbols-outlined text-[14px] ml-0.5">arrow_forward</span>
+</a>
+<a class="inline-flex items-center text-on-surface-variant hover:text-on-surface" href="#">
+<span>GitHub</span>
+<span class="material-symbols-outlined text-[14px] ml-0.5">north_east</span>
+</a>
+</div>
+</div>
+<!-- WORK 03: Event Streaming Mesh -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between font-meta-index text-meta-index text-on-surface-variant">
+<span>03 / INGESTION FABRIC</span>
+<span class="text-primary font-mono">45K OPS/SEC</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+        High-Throughput Event Streaming Mesh
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Distributed ingestion layer handling 45k events/sec with resilient backpressure mechanisms, multi-broker partitioning, and strict exactly-once processing guarantees.
+      </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Backend</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Go</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Kafka</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">PostgreSQL</span>
+</div>
+<div class="flex items-center gap-space-md pt-space-sm font-meta-label text-meta-label">
+<a class="inline-flex items-center text-primary hover:underline underline-offset-4" href="#">
+<span>Architecture</span>
+<span class="material-symbols-outlined text-[14px] ml-0.5">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- View All Link -->
+<div class="pt-space-xs">
+<a class="inline-flex items-center font-meta-label text-meta-label text-on-surface hover:text-primary transition-colors" href="#">
+<span>View all 14 repository projects</span>
+<span class="material-symbols-outlined text-[15px] ml-1">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- DIVIDER -->
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- 03 // EXPERIENCE -->
+<section class="px-margin py-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-meta-index text-meta-index text-primary uppercase">02 // EXPERIENCE</span>
+<span class="font-meta-index text-meta-index text-on-surface-variant">TRACK RECORD</span>
+</div>
+<div class="flex flex-col gap-space-md">
+<!-- Role 1 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<div class="flex items-baseline justify-between font-meta-index text-meta-index">
+<span class="text-primary font-mono">2026 — PRESENT</span>
+<span class="text-on-surface-variant">SAN FRANCISCO / REMOTE</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+          Software Developer Intern
+        </h3>
+<span class="font-meta-label text-meta-label text-on-surface-variant">Tech Modulus</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed pt-space-xs">
+          Built production distributed inference endpoints and microservices using FastAPI, decoupling high-load queue processing and decreasing tail latency by 35%.
+        </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Python</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Docker</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">FastAPI</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">AWS</span>
+</div>
+</div>
+<!-- Role 2 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<div class="flex items-baseline justify-between font-meta-index text-meta-index">
+<span class="text-primary font-mono">2025</span>
+<span class="text-on-surface-variant">ACADEMIC LAB</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+          Machine Learning Research Fellow
+        </h3>
+<span class="font-meta-label text-meta-label text-on-surface-variant">Applied Systems Lab</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed pt-space-xs">
+          Investigated structural model quantization and Parameter-Efficient Fine-Tuning (PEFT) on edge compute accelerators, enabling offline inference on constrained embedded microchips.
+        </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">PyTorch</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">CUDA</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">HuggingFace</span>
+</div>
+</div>
+<!-- Role 3 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<div class="flex items-baseline justify-between font-meta-index text-meta-index">
+<span class="text-primary font-mono">2024</span>
+<span class="text-on-surface-variant">HYBRID</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+          Backend Engineering Intern
+        </h3>
+<span class="font-meta-label text-meta-label text-on-surface-variant">Nexus Cloud Solutions</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed pt-space-xs">
+          Engineered asynchronous database sync worker nodes with PostgreSQL and Redis, reducing repetitive database locks and cutting complex read query latency by 42%.
+        </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Node.js</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">PostgreSQL</span>
+<span class="font-meta-index text-meta-index px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface">Redis</span>
+</div>
+</div>
+</div>
+</section>
+<!-- DIVIDER -->
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- 04 // TECHNICAL STACK -->
+<section class="px-margin py-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-meta-index text-meta-index text-primary uppercase">03 // TECHNICAL STACK</span>
+<span class="font-meta-index text-meta-index text-on-surface-variant">PRODUCTION SUITE</span>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- Skill 1 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<span class="font-meta-index text-meta-index text-primary uppercase">AI &amp; MACHINE LEARNING</span>
+<p class="font-code-block text-code-block text-on-surface">
+          Python, PyTorch, TensorFlow, Scikit-learn, XGBoost, Pandas
+        </p>
+</div>
+<!-- Skill 2 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<span class="font-meta-index text-meta-index text-primary uppercase">GENERATIVE AI</span>
+<p class="font-code-block text-code-block text-on-surface">
+          LangChain, RAG Systems, LangGraph, vLLM, Prompt Tuning, Embeddings
+        </p>
+</div>
+<!-- Skill 3 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<span class="font-meta-index text-meta-index text-primary uppercase">BACKEND &amp; ARCHITECTURE</span>
+<p class="font-code-block text-code-block text-on-surface">
+          FastAPI, Go, Node.js, REST &amp; gRPC, PostgreSQL, Redis, MySQL
+        </p>
+</div>
+<!-- Skill 4 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<span class="font-meta-index text-meta-index text-primary uppercase">INFRASTRUCTURE &amp; DEVOPS</span>
+<p class="font-code-block text-code-block text-on-surface">
+          Docker, GitHub Actions, AWS, Linux, Prometheus, CI/CD
+        </p>
+</div>
+</div>
+</section>
+<!-- DIVIDER -->
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- 05 // CERTIFICATIONS ARCHIVE -->
+<section class="px-margin py-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-meta-index text-meta-index text-primary uppercase">04 // CERTIFICATIONS</span>
+<span class="font-meta-index text-meta-index text-on-surface-variant">VERIFIED ARCHIVE</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Cert 1 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<div class="flex items-start justify-between">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-medium pr-space-sm">
+            AWS Certified Solutions Architect – Associate
+          </h4>
+<span class="font-meta-index text-meta-index text-primary bg-surface-container-high px-space-xs py-0.5 rounded">2025</span>
+</div>
+<div class="flex items-center justify-between pt-space-xs font-meta-index text-meta-index text-on-surface-variant">
+<span>ISSUER: AWS • ID: AWS-782194</span>
+<a class="text-primary hover:underline flex items-center" href="#">
+<span>Verify</span>
+<span class="material-symbols-outlined text-[13px] ml-0.5">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Cert 2 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<div class="flex items-start justify-between">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-medium pr-space-sm">
+            TensorFlow Developer Certificate
+          </h4>
+<span class="font-meta-index text-meta-index text-primary bg-surface-container-high px-space-xs py-0.5 rounded">2024</span>
+</div>
+<div class="flex items-center justify-between pt-space-xs font-meta-index text-meta-index text-on-surface-variant">
+<span>ISSUER: GOOGLE • ID: TF-510492</span>
+<a class="text-primary hover:underline flex items-center" href="#">
+<span>Verify</span>
+<span class="material-symbols-outlined text-[13px] ml-0.5">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Cert 3 -->
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-xs">
+<div class="flex items-start justify-between">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-medium pr-space-sm">
+            Deep Learning Specialization
+          </h4>
+<span class="font-meta-index text-meta-index text-primary bg-surface-container-high px-space-xs py-0.5 rounded">2024</span>
+</div>
+<div class="flex items-center justify-between pt-space-xs font-meta-index text-meta-index text-on-surface-variant">
+<span>ISSUER: DEEPLEARNING.AI</span>
+<a class="text-primary hover:underline flex items-center" href="#">
+<span>Verify</span>
+<span class="material-symbols-outlined text-[13px] ml-0.5">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div>
+<a class="inline-flex items-center font-meta-label text-meta-label text-on-surface hover:text-primary transition-colors" href="#">
+<span>View all certificates</span>
+<span class="material-symbols-outlined text-[15px] ml-1">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- DIVIDER -->
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- 06 // SELECTED ACHIEVEMENTS -->
+<section class="px-margin py-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-meta-index text-meta-index text-primary uppercase">05 // ACHIEVEMENTS</span>
+<span class="font-meta-index text-meta-index text-on-surface-variant">RECOGNITIONS</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Achievement 01 -->
+<div class="bg-surface-container-low rounded p-space-md flex items-start gap-space-md">
+<span class="font-meta-index text-meta-index text-primary font-mono pt-1">01</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-medium">
+            Tata InnoVent 2026 — Winner (RootCause AI)
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Predictive industrial downtime analysis system evaluated against live manufacturing datasets, securing 1st place nationwide.
+          </p>
+</div>
+</div>
+<!-- Achievement 02 -->
+<div class="bg-surface-container-low rounded p-space-md flex items-start gap-space-md">
+<span class="font-meta-index text-meta-index text-primary font-mono pt-1">02</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-medium">
+            ISRO Hackathon — Finalist (Exoplanet Detection)
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Engineered a novel convolutional neural network architecture for planetary transit signal classification from space-borne photometers.
+          </p>
+</div>
+</div>
+<!-- Achievement 03 -->
+<div class="bg-surface-container-low rounded p-space-md flex items-start gap-space-md">
+<span class="font-meta-index text-meta-index text-primary font-mono pt-1">03</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-medium">
+            National Algorithmic Sprint — Top 1% Ranked
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Competitive programming distinction in advanced graph theory, network flow, and dynamic programming algorithms.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- DIVIDER -->
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- 07 // CONTACT CTA -->
+<section class="px-margin py-space-xl flex flex-col gap-space-lg bg-surface-container-low/50" id="contact">
+<div class="flex flex-col gap-space-xs">
+<span class="font-meta-index text-meta-index text-primary uppercase">06 // INITIATE TRANSMISSION</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-semibold pt-space-xs">
+        Have a problem worth solving?
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant pt-space-xs leading-relaxed">
+        I'm always interested in thoughtful engineering challenges, novel AI architectures, and opportunities to build production-scale systems that matter.
+      </p>
+</div>
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<a class="h-12 w-full px-space-lg inline-flex items-center justify-between font-meta-label text-meta-label text-on-primary bg-primary hover:bg-primary-container rounded transition-colors duration-150" href="mailto:osamah@example.com">
+<span class="font-semibold tracking-wider">GET IN TOUCH</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<div class="grid grid-cols-3 gap-space-xs pt-space-xs">
+<a class="h-10 px-space-xs inline-flex items-center justify-center font-meta-index text-meta-index text-on-surface bg-surface-container-high hover:bg-surface-container-highest rounded transition-colors" href="https://linkedin.com" rel="noopener noreferrer" target="_blank">
+<span>LINKEDIN</span>
+<span class="material-symbols-outlined text-[12px] ml-0.5">north_east</span>
+</a>
+<a class="h-10 px-space-xs inline-flex items-center justify-center font-meta-index text-meta-index text-on-surface bg-surface-container-high hover:bg-surface-container-highest rounded transition-colors" href="https://github.com" rel="noopener noreferrer" target="_blank">
+<span>GITHUB</span>
+<span class="material-symbols-outlined text-[12px] ml-0.5">north_east</span>
+</a>
+<a class="h-10 px-space-xs inline-flex items-center justify-center font-meta-index text-meta-index text-on-surface bg-surface-container-high hover:bg-surface-container-highest rounded transition-colors" href="mailto:osamah@example.com">
+<span>EMAIL</span>
+<span class="material-symbols-outlined text-[12px] ml-0.5">north_east</span>
+</a>
+</div>
+</div>
+</section>
+</div><footer class="mt-space-xl px-gutter pt-space-xl pb-space-lg bg-surface-container-lowest"><div class="flex flex-col gap-space-md"><div class="flex items-baseline justify-between"><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">OSAMAH</span><span class="font-meta-index text-meta-index text-primary tracking-widest">AI/ML • SYSTEMS</span></div><p class="font-meta-label text-meta-label text-on-surface-variant">ADVANCED COMPUTING • MODEL ARCHITECTURE • DISTRIBUTED SYSTEMS</p><div class="flex flex-wrap gap-space-md pt-space-xs"><a class="font-meta-label text-meta-label text-on-surface hover:text-primary transition-colors" data-path="github" href="#">GITHUB</a><a class="font-meta-label text-meta-label text-on-surface hover:text-primary transition-colors" data-path="linkedin" href="#">LINKEDIN</a><a class="font-meta-label text-meta-label text-on-surface hover:text-primary transition-colors" data-path="contact" href="#">EMAIL</a><a class="font-meta-label text-meta-label text-on-surface hover:text-primary transition-colors" data-path="resume" href="#">RESUME</a></div><div class="flex items-center justify-between pt-space-md text-on-surface-variant font-meta-index text-meta-index"><span>© 2026 OSAMAH</span><a class="text-on-surface-variant/40 hover:text-on-surface-variant transition-colors" data-path="admin-portal" href="#">ADMIN</a></div></div></footer></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.5)]" data-active-classes="text-primary"><div class="flex justify-around items-center h-16 px-space-xs"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-space-xs transition-colors text-primary" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">terminal</span><span class="font-meta-index text-meta-index">OVERVIEW</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="research-systems" href="#"><span class="material-symbols-outlined text-[20px]">model_training</span><span class="font-meta-index text-meta-index">SYSTEMS</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="case-studies" href="#"><span class="material-symbols-outlined text-[20px]">data_object</span><span class="font-meta-index text-meta-index">WORKS</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="writings" href="#"><span class="material-symbols-outlined text-[20px]">article</span><span class="font-meta-index text-meta-index">NOTES</span></a></div></nav></body></html>

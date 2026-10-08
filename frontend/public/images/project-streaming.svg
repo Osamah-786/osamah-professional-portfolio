@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" fill="none">
+  <rect width="1200" height="760" fill="#191b20"/>
+  <path d="M0 90h1200M0 670h1200M80 0v760M1120 0v760" stroke="#35363c"/>
+  <path d="M206 380h160l116-132h180l120 132h206M366 380l116 132h180l120-132" stroke="#696660" stroke-width="2"/>
+  <path d="M366 380h416" stroke="#d99b65" stroke-width="3"/>
+  <rect x="132" y="326" width="148" height="108" fill="#111317" stroke="#4a4b50" stroke-width="2"/>
+  <rect x="352" y="326" width="148" height="108" fill="#111317" stroke="#d99b65" stroke-width="2"/>
+  <rect x="572" y="194" width="148" height="108" fill="#111317" stroke="#4a4b50" stroke-width="2"/>
+  <rect x="572" y="458" width="148" height="108" fill="#111317" stroke="#4a4b50" stroke-width="2"/>
+  <rect x="792" y="326" width="148" height="108" fill="#111317" stroke="#d99b65" stroke-width="2"/>
+  <rect x="1012" y="326" width="92" height="108" fill="#111317" stroke="#4a4b50" stroke-width="2"/>
+  <path d="M156 362h100m-100 28h76m-52 0h28M376 362h100m-100 28h76m-52 0h28M596 230h100m-100 28h76m-52 0h28M596 494h100m-100 28h76m-52 0h28M816 362h100m-100 28h76m-52 0h28M1030 362h56m-56 28h44" stroke="#96918a" stroke-width="3"/>
+  <text x="132" y="158" fill="#96918a" font-family="monospace" font-size="14" letter-spacing="2">EVENT FLOW / SAMPLE VISUAL</text>
+</svg>

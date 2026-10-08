@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}#drawer-toggle:checked~#nav-drawer{transform:translateX(0);pointer-events:auto;}#drawer-toggle:checked~#drawer-overlay{opacity:1;pointer-events:auto;}</style><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&family=Newsreader:wght@100..900&display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#d97736", "on-error-container": "#ffdad6", "on-primary-container": "#491d00", "surface-dim": "#111317", "tertiary": "#ffb95f", "surface-container-low": "#1a1c20", "surface-container-high": "#282a2e", "on-error": "#690005", "primary": "#ffb68c", "on-secondary-container": "#ffbb94", "tertiary-fixed": "#ffddb8", "on-primary-fixed": "#321200", "surface-container-lowest": "#0c0e12", "on-surface": "#e2e2e8", "on-surface-variant": "#dbc1b4", "on-primary-fixed-variant": "#753400", "surface": "#111317", "surface-container-highest": "#333539", "on-secondary": "#532200", "on-secondary-fixed-variant": "#763300", "secondary-fixed": "#ffdbc9", "inverse-primary": "#994703", "primary-fixed": "#ffdbc9", "outline": "#a38c80", "error": "#ffb4ab", "surface-tint": "#ffb68c", "on-background": "#e2e2e8", "tertiary-fixed-dim": "#ffb95f", "outline-variant": "#554339", "error-container": "#93000a", "on-tertiary-fixed": "#2a1700", "secondary-fixed-dim": "#ffb68d", "surface-bright": "#37393e", "inverse-on-surface": "#2f3035", "secondary-container": "#8c3e00", "surface-container": "#1e2024", "primary-fixed-dim": "#ffb68c", "tertiary-container": "#ca8100", "surface-variant": "#333539", "on-primary": "#532200", "inverse-surface": "#e2e2e8", "on-secondary-fixed": "#331200", "background": "#111317", "on-tertiary-container": "#3e2400", "on-tertiary-fixed-variant": "#653e00", "secondary": "#ffb68d", "on-tertiary": "#472a00" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.5rem", "gutter-mobile": "1rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "space-md": "1rem", "space-xl": "2.5rem", "margin": "2rem", "gutter": "1.5rem", "space-lg": "1.5rem" }, "fontFamily": { "headline-sm": ["Geist"], "body-lg": ["Newsreader"], "body-sm": ["Geist"], "label-code": ["JetBrains Mono"], "display-hero": ["Newsreader"], "headline-lg": ["Newsreader"], "headline-md": ["Geist"], "headline-lg-mobile": ["Newsreader"], "label-mono": ["JetBrains Mono"], "display-hero-mobile": ["Newsreader"], "body-md": ["Geist"] }, "fontSize": { "headline-sm": ["1.125rem", { "lineHeight": "1.45", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["1.1875rem", { "lineHeight": "1.75", "letterSpacing": "0em", "fontWeight": "400" }], "body-sm": ["0.8125rem", { "lineHeight": "1.55", "letterSpacing": "0.005em", "fontWeight": "400" }], "label-code": ["0.8125rem", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }], "display-hero": ["3.5rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "400" }], "headline-lg": ["2.25rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-md": ["1.375rem", { "lineHeight": "1.4", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg-mobile": ["1.75rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "400" }], "label-mono": ["0.75rem", { "lineHeight": "1.4", "letterSpacing": "0.04em", "fontWeight": "500" }], "display-hero-mobile": ["2.25rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "400" }], "body-md": ["0.9375rem", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface-container-lowest text-on-surface antialiased flex flex-col min-h-screen"><input class="hidden" id="drawer-toggle" type="checkbox"/><div class="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="drawer-overlay"><label class="absolute inset-0 cursor-pointer" for="drawer-toggle"></label></div><aside class="fixed top-0 right-0 z-50 w-72 h-full bg-surface-container-low shadow-[0_8px_32px_-4px_rgba(0,0,0,0.7)] transform translate-x-full pointer-events-none transition-transform duration-300 ease-out flex flex-col justify-between pt-safe pb-safe" id="nav-drawer"><div class="flex flex-col"><div class="h-14 px-gutter-mobile flex items-center justify-between bg-surface-container-low"><div class="flex items-center gap-space-xs"><span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Runtime Nav</span></div><label class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface cursor-pointer" for="drawer-toggle"><span class="material-symbols-outlined text-lg">close</span></label></div><div class="px-gutter-mobile py-space-sm bg-surface-container"><span class="font-label-mono text-label-mono text-primary uppercase block">PORTFOLIO_CMS // v2.4 (PROD)</span><span class="font-body-sm text-body-sm text-on-surface-variant">Core Architect Session</span></div><nav class="flex flex-col py-space-sm"><a class="flex items-center gap-space-sm px-gutter-mobile h-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-xl">dashboard</span><span class="font-headline-sm text-headline-sm text-sm tracking-wide">Dashboard</span></a><a class="flex items-center gap-space-sm px-gutter-mobile h-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="projects" href="#"><span class="material-symbols-outlined text-xl">terminal</span><span class="font-headline-sm text-headline-sm text-sm tracking-wide">Projects</span></a><a class="flex items-center gap-space-sm px-gutter-mobile h-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="experience" href="#"><span class="material-symbols-outlined text-xl">timeline</span><span class="font-headline-sm text-headline-sm text-sm tracking-wide">Experience</span></a><a class="flex items-center gap-space-sm px-gutter-mobile h-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="certificates" href="#"><span class="material-symbols-outlined text-xl">verified</span><span class="font-headline-sm text-headline-sm text-sm tracking-wide">Certificates</span></a><a class="flex items-center gap-space-sm px-gutter-mobile h-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="content-editor" href="#"><span class="material-symbols-outlined text-xl">edit_document</span><span class="font-headline-sm text-headline-sm text-sm tracking-wide">Content</span></a></nav></div><div class="p-gutter-mobile bg-surface-container-lowest"><a class="flex items-center justify-center gap-space-xs h-11 w-full bg-surface-container text-error hover:bg-surface-container-high rounded transition-colors font-label-mono text-label-mono uppercase tracking-wider" data-path="login" href="#"><span class="material-symbols-outlined text-base">logout</span><span>Terminate Session</span></a></div></aside><header class="fixed top-0 w-full z-40 bg-surface-container-lowest/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-14 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Engineer CMS Monogram" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UXMGHOgEZG6zEryDdav71xZbkl7I99NY_j18VmgvJo5Z1MnriscvmzJMmA90HNQAArHq4t-rQXeDMKQOiNWSV86vnyS3xOtiDbz9g7Sm_mvptUaEQQdtNrgCYEGTDrOpN58aTMrjw3C1t0Tl0NPID164xQrYQulewUwHLxQ80ooKRtSoZBpDapzwae0o5UDIbp5GbsuwB8UKj9rt_d1LS_XFK87waVxoCwR6xxHSbQxA"/><div class="flex flex-col"><span class="font-label-mono text-label-mono text-primary-container leading-none tracking-tight">PORTFOLIO_CMS // v2.4 (PROD)</span><span class="font-headline-sm text-headline-sm text-on-surface text-xs leading-tight">Dashboard</span></div></div><div class="flex items-center gap-space-xs"><label class="relative flex items-center justify-center w-11 h-11 cursor-pointer" for="drawer-toggle"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzOR4otGFh8AU3mohNIJbdw1_x8S6iBEDNJSeYapexr3ui7FFci4BtIPE2nhK-rqXQnSxSyhKDvkN3ybnhHmymKNVVHttSH40qe8uSALGQrCJMtM5oZ_2XUFQQU2BbopGH5jIFtmNURuLasFuibL0GY3r-7OHPNEZ4HAScpDG-Tdgv3kPXBMNjOi-TKnjfx4dC9kwpnAXGk_7l6XZWwLgU3i6Yop6loejmIwZo0a6p"/><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container ring-2 ring-surface-container-lowest animate-ping"></span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container ring-2 ring-surface-container-lowest"></span></label></div></div></header><main class="flex flex-col relative w-full pt-14 pb-20 bg-surface-container-lowest min-h-screen"><div class="flex flex-col w-full text-on-surface">
+<!-- System Telemetry Ribbon -->
+<div class="px-gutter-mobile pt-space-sm pb-space-xs bg-surface-container-lowest">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-mono text-label-mono text-primary-container uppercase tracking-wider">RUNTIME // NODE_01</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-mono text-[10px] text-outline uppercase tracking-widest px-1.5 py-0.5 rounded bg-surface-container">commit: 7f8a92c</span>
+</div>
+</div>
+<!-- Editorial Header Section -->
+<div class="pt-space-xs pb-space-sm">
+<div class="flex items-baseline justify-between gap-space-sm">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">Portfolio Overview</h1>
+<span class="font-label-mono text-label-mono text-primary-container uppercase px-2 py-0.5 rounded bg-surface-container-high">env: prod</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Manage, orchestrate, and publish editorial engineering assets across edges.</p>
+<!-- Telemetry Tags -->
+<div class="flex flex-wrap items-center gap-2 mt-space-sm">
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="font-label-mono text-[11px] text-on-surface-variant">sys.status: synced</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container">
+<span class="material-symbols-outlined text-[13px] text-outline">schedule</span>
+<span class="font-label-mono text-[11px] text-on-surface-variant">last_build: 14m ago</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container">
+<span class="material-symbols-outlined text-[13px] text-outline">dns</span>
+<span class="font-label-mono text-[11px] text-on-surface-variant">isr: active</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Metrics / Engineering Grid -->
+<section class="px-gutter-mobile py-space-sm">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-mono text-label-mono uppercase tracking-wider text-outline">Database Indices</span>
+<span class="font-label-mono text-[10px] text-outline">5 partitions</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- 01 Projects -->
+<div class="p-3 rounded bg-surface-container flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-[10px] text-primary-container tracking-wider">[01] PROJECTS</span>
+<span class="material-symbols-outlined text-sm text-outline">code</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">12</span>
+<span class="font-label-mono text-[11px] text-tertiary">4 featured</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-primary-container" style="width: 33%"></div>
+</div>
+</div>
+<!-- 02 Experience -->
+<div class="p-3 rounded bg-surface-container flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-[10px] text-primary-container tracking-wider">[02] EXP</span>
+<span class="material-symbols-outlined text-sm text-outline">history_edu</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">05</span>
+<span class="font-label-mono text-[11px] text-tertiary">2 featured</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-primary-container" style="width: 40%"></div>
+</div>
+</div>
+<!-- 03 Certs -->
+<div class="p-3 rounded bg-surface-container flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-[10px] text-primary-container tracking-wider">[03] CERTS</span>
+<span class="material-symbols-outlined text-sm text-outline">verified</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">08</span>
+<span class="font-label-mono text-[11px] text-tertiary">3 featured</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-primary-container" style="width: 37%"></div>
+</div>
+</div>
+<!-- 04 Skills -->
+<div class="p-3 rounded bg-surface-container flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-mono text-[10px] text-primary-container tracking-wider">[04] SKILLS</span>
+<span class="material-symbols-outlined text-sm text-outline">format_h4</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="font-headline-md text-headline-md text-on-surface">34</span>
+<span class="font-label-mono text-[10px] text-outline">6 scopes</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-secondary" style="width: 68%"></div>
+</div>
+</div>
+<!-- 05 Achievements (Span 2) -->
+<div class="col-span-2 p-3 rounded bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-base">military_tech</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono text-[10px] text-primary-container tracking-wider">[05] MILESTONES & AWARDS</span>
+<span class="font-body-sm text-body-sm text-outline">Verified technical distinctions</span>
+</div>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">07</span>
+<span class="font-label-mono text-[10px] text-outline">logged</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Actions Command Bar -->
+<section class="px-gutter-mobile py-space-xs">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-mono text-label-mono uppercase tracking-wider text-outline">Dispatch Directives</span>
+<span class="font-label-mono text-[10px] text-outline">alt+q</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- Primary Action -->
+<button class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded bg-primary-container text-on-primary-container font-headline-sm text-headline-sm text-xs active:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-base">add_circle</span>
+<span>+ Add Project</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded bg-surface-container text-on-surface hover:bg-surface-container-high font-label-mono text-label-mono transition-colors">
+<span class="material-symbols-outlined text-sm text-outline">work_history</span>
+<span>+ Add Exp</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded bg-surface-container text-on-surface hover:bg-surface-container-high font-label-mono text-label-mono transition-colors">
+<span class="material-symbols-outlined text-sm text-outline">card_membership</span>
+<span>+ Add Cert</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded bg-surface-container text-on-surface hover:bg-surface-container-high font-label-mono text-label-mono transition-colors">
+<span class="material-symbols-outlined text-sm text-outline">badge</span>
+<span>Edit Bio</span>
+</button>
+</div>
+</section>
+<!-- Visual Blueprint Snapshot (Asset generation showcase) -->
+<section class="px-gutter-mobile py-space-sm">
+<div class="p-3 rounded bg-surface-container flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary-container">architecture</span>
+<span class="font-label-mono text-label-mono uppercase text-on-surface">Public Node Preview</span>
+</div>
+<span class="font-label-mono text-[10px] text-outline">dev.atelier.id</span>
+</div>
+<div class="relative w-full h-28 rounded overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover opacity-60" data-alt="Editorial close up view of an engineer workspace in deep moody tungsten lighting. A dark obsidian matte mechanical keyboard and dark terminal code monitor glowing in amber and copper hues. Clean ultra minimalist styling with graphite tones and cinematic depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC66ko08lj-A5WwpTPdRpFoa7qk_xYiVOfEDklIquZ4nTF3Vgwn7QsL_UrbpIX2IMV-o6COtk-s7O3aZpiHVJnbUW_LK-BTZpQC4NnmwhKLd7aEd5SUWSgvY4y77c0itV1oy2Trn7vuDKKuIFsZCYsZlMwdV6Dc0SxyjxDW_mWEn8pa9LLc3X_vCDjowCFRjqZf6a1Xcx3IWIc18PL5XKsWnnSWY-DOod-77A5KLeQu"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-center justify-between">
+<span class="font-label-mono text-[10px] text-on-surface bg-surface-container-lowest/80 px-2 py-0.5 rounded">HERO_BANNER // HASH: 9bc231</span>
+<span class="font-label-mono text-[10px] text-primary-container">LIVE AT CDN</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Content: Ordered Stack -->
+<section class="px-gutter-mobile py-space-sm">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-2">
+<span class="font-label-mono text-label-mono uppercase tracking-wider text-outline">Featured Stack</span>
+<span class="font-label-mono text-[10px] text-primary-container bg-surface-container-high px-1.5 py-0.2 rounded">DISPLAY_ORDER</span>
+</div>
+<span class="font-label-mono text-[10px] text-outline">4 pinned</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Item 1: Distributed Raft KV Store -->
+<div class="p-3 rounded bg-surface-container flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2 min-w-0">
+<span class="font-label-mono text-[10px] text-primary-container px-1.5 py-0.5 rounded bg-surface-container-high font-bold">#01</span>
+<span class="font-headline-sm text-headline-sm text-sm text-on-surface truncate">Distributed Raft KV Store</span>
+</div>
+<div class="flex items-center gap-1.5 shrink-0">
+<button aria-label="Toggle pin" class="w-7 h-7 rounded bg-surface-container-high text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button aria-label="Edit project" class="w-7 h-7 rounded bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-wrap gap-1">
+<span class="font-label-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container-lowest">Rust</span>
+<span class="font-label-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container-lowest">Raft</span>
+<span class="font-label-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container-lowest">gRPC</span>
+</div>
+<span class="font-label-mono text-[10px] text-tertiary">PROJECT</span>
+</div>
+</div>
+<!-- Item 2: Kernel Trace Visualizer -->
+<div class="p-3 rounded bg-surface-container flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2 min-w-0">
+<span class="font-label-mono text-[10px] text-primary-container px-1.5 py-0.5 rounded bg-surface-container-high font-bold">#02</span>
+<span class="font-headline-sm text-headline-sm text-sm text-on-surface truncate">Kernel Trace Visualizer</span>
+</div>
+<div class="flex items-center gap-1.5 shrink-0">
+<button aria-label="Toggle pin" class="w-7 h-7 rounded bg-surface-container-high text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button aria-label="Edit project" class="w-7 h-7 rounded bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-wrap gap-1">
+<span class="font-label-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container-lowest">eBPF</span>
+<span class="font-label-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container-lowest">Go</span>
+<span class="font-label-mono text-[10px] text-outline px-1.5 py-0.5 rounded bg-surface-container-lowest">React</span>
+</div>
+<span class="font-label-mono text-[10px] text-tertiary">PROJECT</span>
+</div>
+</div>
+<!-- Item 3: Staff Systems Engineer -->
+<div class="p-3 rounded bg-surface-container flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2 min-w-0">
+<span class="font-label-mono text-[10px] text-primary-container px-1.5 py-0.5 rounded bg-surface-container-high font-bold">#01</span>
+<span class="font-headline-sm text-headline-sm text-sm text-on-surface truncate">Staff Systems Engineer</span>
+</div>
+<div class="flex items-center gap-1.5 shrink-0">
+<button aria-label="Toggle pin" class="w-7 h-7 rounded bg-surface-container-high text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button aria-label="Edit experience" class="w-7 h-7 rounded bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-body-sm text-body-sm text-outline">Cloudflare • 2022 - Present</span>
+<span class="font-label-mono text-[10px] text-secondary">CAREER</span>
+</div>
+</div>
+<!-- Item 4: CKA Certificate -->
+<div class="p-3 rounded bg-surface-container flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2 min-w-0">
+<span class="font-label-mono text-[10px] text-primary-container px-1.5 py-0.5 rounded bg-surface-container-high font-bold">#01</span>
+<span class="font-headline-sm text-headline-sm text-sm text-on-surface truncate">CKA: Certified K8s Admin</span>
+</div>
+<div class="flex items-center gap-1.5 shrink-0">
+<button aria-label="Toggle pin" class="w-7 h-7 rounded bg-surface-container-high text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button aria-label="Edit certificate" class="w-7 h-7 rounded bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-body-sm text-body-sm text-outline">Linux Foundation • Issued: 2024</span>
+<span class="font-label-mono text-[10px] text-primary">CREDENTIAL</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity Audit Log -->
+<section class="px-gutter-mobile py-space-sm">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-mono text-label-mono uppercase tracking-wider text-outline">Journal & Event Stream</span>
+<span class="font-label-mono text-[10px] text-outline">audit.log</span>
+</div>
+<div class="rounded bg-surface-container p-3 flex flex-col gap-3">
+<!-- Log entry 1 -->
+<div class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-primary-container mt-1 shrink-0"></span>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-baseline justify-between gap-1">
+<span class="font-headline-sm text-headline-sm text-xs text-on-surface truncate">Project updated</span>
+<span class="font-label-mono text-[10px] text-outline shrink-0">28m ago</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">"Distributed Raft KV Store" (v1.4 benchmarks added)</span>
+<span class="font-label-mono text-[10px] text-outline mt-0.5">diff: +248 / -12 lines</span>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Log entry 2 -->
+<div class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-secondary mt-1 shrink-0"></span>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-baseline justify-between gap-1">
+<span class="font-headline-sm text-headline-sm text-xs text-on-surface truncate">Certificate registered</span>
+<span class="font-label-mono text-[10px] text-outline shrink-0">3h ago</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">"AWS Solutions Architect Professional"</span>
+<span class="font-label-mono text-[10px] text-outline mt-0.5">cert_id: AWS-SAP-89210</span>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Log entry 3 -->
+<div class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-tertiary mt-1 shrink-0"></span>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-baseline justify-between gap-1">
+<span class="font-headline-sm text-headline-sm text-xs text-on-surface truncate">Experience updated</span>
+<span class="font-label-mono text-[10px] text-outline shrink-0">Yesterday</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cloudflare role updated to Staff notation</span>
+<span class="font-label-mono text-[10px] text-outline mt-0.5">state: approved</span>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container-high"></div>
+<!-- Log entry 4 -->
+<div class="flex items-start gap-2.5">
+<span class="w-2 h-2 rounded-full bg-outline mt-1 shrink-0"></span>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-baseline justify-between gap-1">
+<span class="font-headline-sm text-headline-sm text-xs text-on-surface truncate">Headline & profile sync</span>
+<span class="font-label-mono text-[10px] text-outline shrink-0">3d ago</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Biographical summary aligned with external RSS feed</span>
+<span class="font-label-mono text-[10px] text-outline mt-0.5">channel: mastodon/sync</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Edge Cache Status & Instant Publish Banner -->
+<section class="px-gutter-mobile pt-space-xs pb-space-lg">
+<div class="p-3.5 rounded bg-surface-container flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary-container">cloud_sync</span>
+<span class="font-label-mono text-label-mono uppercase text-on-surface">Global CDN Orchestrator</span>
+</div>
+<span class="font-label-mono text-[10px] text-tertiary">310 PoPs OK</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Static edge deployment synced to 310 PoPs worldwide. Next scheduled ISR compilation cycle runs in <span class="font-label-mono text-on-surface font-bold">46m</span>.
+      </p>
+<div class="flex items-center justify-between pt-1 gap-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-mono text-[11px] text-outline">Cache hit ratio: 99.82%</span>
+</div>
+<button class="px-3 py-1.5 rounded bg-surface-container-high text-primary font-label-mono text-label-mono hover:bg-surface-bright active:bg-primary-container active:text-on-primary-container transition-all flex items-center gap-1.5" id="rebuild-btn">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span>Trigger Rebuild</span>
+</button>
+</div>
+<!-- Dynamic Feedback Toast / Triggered State -->
+<div class="hidden px-2.5 py-1.5 rounded bg-surface-container-high flex items-center justify-between" id="rebuild-toast">
+<span class="font-label-mono text-[10px] text-primary-container">>> DISPATCH_HOOK SENT: 202 ACCEPTED</span>
+<span class="font-label-mono text-[10px] text-outline">t+0.14s</span>
+</div>
+</div>
+</section>
+<!-- Interactive script for feedback -->
+<script>
+    (function() {
+      const rebuildBtn = document.getElementById('rebuild-btn');
+      const toast = document.getElementById('rebuild-toast');
+      if (rebuildBtn && toast) {
+        rebuildBtn.addEventListener('click', () => {
+          rebuildBtn.disabled = true;
+          rebuildBtn.classList.add('opacity-50');
+          toast.classList.remove('hidden');
+          setTimeout(() => {
+            rebuildBtn.disabled = false;
+            rebuildBtn.classList.remove('opacity-50');
+            setTimeout(() => {
+              toast.classList.add('hidden');
+            }, 3000);
+          }, 1200);
+        });
+      }
+    })();
+  </script>
+</div></main><nav class="fixed bottom-0 w-full z-40 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.5)]" data-active-classes="text-primary bg-surface-container"><div class="flex items-center justify-around h-16 px-space-xs"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 rounded transition-all text-primary bg-surface-container" data-path="dashboard" href="#"><span class="material-symbols-outlined text-xl">dashboard</span><span class="font-label-mono text-[10px] tracking-tight uppercase">Dash</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 rounded text-on-surface-variant hover:text-on-surface transition-all" data-path="projects" href="#"><span class="material-symbols-outlined text-xl">terminal</span><span class="font-label-mono text-[10px] tracking-tight uppercase">Projects</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 rounded text-on-surface-variant hover:text-on-surface transition-all" data-path="experience" href="#"><span class="material-symbols-outlined text-xl">timeline</span><span class="font-label-mono text-[10px] tracking-tight uppercase">Exp</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 rounded text-on-surface-variant hover:text-on-surface transition-all" data-path="certificates" href="#"><span class="material-symbols-outlined text-xl">verified</span><span class="font-label-mono text-[10px] tracking-tight uppercase">Certs</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs py-1 rounded text-on-surface-variant hover:text-on-surface transition-all" data-path="content-editor" href="#"><span class="material-symbols-outlined text-xl">edit_document</span><span class="font-label-mono text-[10px] tracking-tight uppercase">Content</span></a></div></nav></body></html>

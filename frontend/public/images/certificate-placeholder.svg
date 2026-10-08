@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 540" fill="none">
+  <rect width="420" height="540" fill="#191b20"/>
+  <rect x="28" y="28" width="364" height="484" fill="#111317" stroke="#4a4b50"/>
+  <path d="M48 92h324M48 436h324" stroke="#35363c"/>
+  <path d="M48 48h54" stroke="#d99b65" stroke-width="3"/>
+  <text x="48" y="76" fill="#96918a" font-family="monospace" font-size="11" letter-spacing="2">CREDENTIAL / PREVIEW</text>
+  <path d="M92 168h236M92 190h202M92 212h218" stroke="#77736e" stroke-width="3"/>
+  <path d="M92 272h236M92 294h190" stroke="#4a4b50" stroke-width="2"/>
+  <circle cx="210" cy="368" r="44" stroke="#d99b65" stroke-width="2"/>
+  <circle cx="210" cy="368" r="31" stroke="#4a4b50"/>
+  <path d="m194 368 11 11 22-24" stroke="#c7c2ba" stroke-width="3" stroke-linecap="square"/>
+  <text x="48" y="472" fill="#96918a" font-family="monospace" font-size="10" letter-spacing="1">REPLACE WITH ISSUED DOCUMENT</text>
+</svg>
