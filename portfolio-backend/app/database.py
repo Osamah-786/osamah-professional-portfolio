@@ -1,10 +1,29 @@
 from collections.abc import Generator
+import ssl
+from typing import Literal
 
 from sqlalchemy import URL, create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 from app.config import settings
+
+
+MySQLTLSMode = Literal["preferred", "verify_identity"]
+
+
+def _build_engine_options(tls_mode: MySQLTLSMode) -> dict[str, object]:
+    options: dict[str, object] = {
+        "pool_pre_ping": True,
+        "hide_parameters": True,
+    }
+
+    if tls_mode == "verify_identity":
+        tls_context = ssl.create_default_context()
+        options["connect_args"] = {"ssl": tls_context}
+        options["pool_recycle"] = 300
+
+    return options
 
 
 database_url = URL.create(
@@ -17,7 +36,7 @@ database_url = URL.create(
     query={"charset": "utf8mb4"},
 )
 
-engine = create_engine(database_url, pool_pre_ping=True, hide_parameters=True)
+engine = create_engine(database_url, **_build_engine_options(settings.mysql_tls_mode))
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 

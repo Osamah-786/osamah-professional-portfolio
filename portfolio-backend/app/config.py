@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     mysql_user: str = "root"
     mysql_password: str = ""
     mysql_database: str = "portfolio_db"
+    mysql_tls_mode: Literal["preferred", "verify_identity"] = "preferred"
     jwt_secret_key: SecretStr = SecretStr("")
     jwt_algorithm: Literal["HS256", "HS384", "HS512"] = "HS256"
     access_token_expire_minutes: int = Field(default=30, gt=0, le=60)
