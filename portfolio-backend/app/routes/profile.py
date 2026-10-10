@@ -7,6 +7,7 @@ from app.database import get_db
 from app.models.profile import Profile
 from app.models.user import User
 from app.schemas.profile import ProfileResponse, ProfileUpdate
+from app.utils.database_logging import log_database_error
 from app.utils.dependencies import get_current_admin
 
 router = APIRouter()
@@ -28,7 +29,8 @@ def _current_profile(db: Session) -> Profile | None:
 def get_profile(db: Session = Depends(get_db)) -> Profile:
     try:
         profile = _current_profile(db)
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
+        log_database_error("profile.get", error)
         raise _database_unavailable() from None
     if profile is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found")
@@ -63,6 +65,7 @@ def update_profile(
         return profile
     except HTTPException:
         raise
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
         db.rollback()
+        log_database_error("profile.update", error)
         raise _database_unavailable() from None

@@ -7,6 +7,7 @@ from app.database import get_db
 from app.models.project import Project
 from app.models.user import User
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
+from app.utils.database_logging import log_database_error
 from app.utils.dependencies import get_current_admin
 
 router = APIRouter()
@@ -23,7 +24,8 @@ def _database_unavailable() -> HTTPException:
 def list_projects(db: Session = Depends(get_db)) -> list[Project]:
     try:
         return list(db.scalars(select(Project).order_by(Project.display_order, Project.id)).all())
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
+        log_database_error("projects.list", error)
         raise _database_unavailable() from None
 
 
@@ -36,7 +38,8 @@ def list_featured_projects(db: Session = Depends(get_db)) -> list[Project]:
     )
     try:
         return list(db.scalars(statement).all())
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
+        log_database_error("projects.list_featured", error)
         raise _database_unavailable() from None
 
 
@@ -44,7 +47,8 @@ def list_featured_projects(db: Session = Depends(get_db)) -> list[Project]:
 def get_project_by_slug(slug: str, db: Session = Depends(get_db)) -> Project:
     try:
         project = db.scalar(select(Project).where(Project.slug == slug))
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
+        log_database_error("projects.get_by_slug", error)
         raise _database_unavailable() from None
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
@@ -74,8 +78,9 @@ def create_project(
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Project slug already exists") from None
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
         db.rollback()
+        log_database_error("projects.create", error)
         raise _database_unavailable() from None
 
 
@@ -114,8 +119,9 @@ def update_project(
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Project slug already exists") from None
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
         db.rollback()
+        log_database_error("projects.update", error)
         raise _database_unavailable() from None
 
 
@@ -134,6 +140,7 @@ def delete_project(
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except HTTPException:
         raise
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
         db.rollback()
+        log_database_error("projects.delete", error)
         raise _database_unavailable() from None
