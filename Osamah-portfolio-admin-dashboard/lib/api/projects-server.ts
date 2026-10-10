@@ -2,6 +2,22 @@ import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, getTokenFromSessionCookie } from "@/lib/auth/session";
 
 export type BackendResult = { status: number; body?: unknown };
+type BackendDiagnosticOperation = "media_upload";
+
+function logBackendDiagnostic(
+  operation: BackendDiagnosticOperation,
+  stage: string,
+  status: number,
+  error?: unknown,
+) {
+  const errorType = error instanceof Error ? error.name : undefined;
+  console.warn("[admin-backend] request diagnostic", {
+    operation,
+    stage,
+    status,
+    ...(errorType ? { errorType } : {}),
+  });
+}
 
 function apiUrl(path: string): URL | null {
   const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -22,12 +38,26 @@ export async function callProjectsBackend(
   path: string,
   method: "GET" | "POST" | "PUT" | "DELETE",
   body?: unknown,
+  diagnosticOperation?: BackendDiagnosticOperation,
 ): Promise<BackendResult> {
   const url = apiUrl(path);
-  if (!url) return { status: 503 };
-  const cookieStore = await cookies();
-  const token = getTokenFromSessionCookie(cookieStore.get(AUTH_COOKIE_NAME)?.value);
-  if (!token) return { status: 401 };
+  if (!url) {
+    if (diagnosticOperation) logBackendDiagnostic(diagnosticOperation, "backend_url_configuration", 503);
+    return { status: 503 };
+  }
+
+  let token: string | null;
+  try {
+    const cookieStore = await cookies();
+    token = getTokenFromSessionCookie(cookieStore.get(AUTH_COOKIE_NAME)?.value);
+  } catch (error) {
+    if (diagnosticOperation) logBackendDiagnostic(diagnosticOperation, "admin_session_read", 500, error);
+    return { status: 500 };
+  }
+  if (!token) {
+    if (diagnosticOperation) logBackendDiagnostic(diagnosticOperation, "admin_session_validation", 401);
+    return { status: 401 };
+  }
 
   const headers = new Headers({ Accept: "application/json", Authorization: `Bearer ${token}` });
   const isMultipart = typeof FormData !== "undefined" && body instanceof FormData;
@@ -41,7 +71,8 @@ export async function callProjectsBackend(
       body: body === undefined ? undefined : isMultipart ? body : JSON.stringify(body),
       cache: "no-store",
     });
-  } catch {
+  } catch (error) {
+    if (diagnosticOperation) logBackendDiagnostic(diagnosticOperation, "backend_network_request", 503, error);
     return { status: 503 };
   }
 
@@ -49,8 +80,13 @@ export async function callProjectsBackend(
   let payload: unknown;
   try {
     payload = await response.json();
-  } catch {
-    return { status: response.ok ? 502 : response.status };
+  } catch (error) {
+    const status = response.ok ? 502 : response.status;
+    if (diagnosticOperation) logBackendDiagnostic(diagnosticOperation, "backend_response_parse", status, error);
+    return { status };
+  }
+  if (!response.ok && diagnosticOperation) {
+    logBackendDiagnostic(diagnosticOperation, "backend_http_response", response.status);
   }
   return { status: response.status, body: payload };
 }

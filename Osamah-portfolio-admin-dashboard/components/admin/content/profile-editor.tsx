@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FieldLabel, Input, Textarea } from "@/components/ui/form-controls";
 import { ErrorState, LoadingState } from "@/components/ui/state-panel";
 import { ProfileApiError, getProfile, updateProfile, type Profile, type ProfileInput } from "@/lib/api/profile";
-import { MediaApiError, uploadMedia } from "@/lib/api/media";
+import { MAX_ADMIN_UPLOAD_SIZE_BYTES, MediaApiError, uploadMedia } from "@/lib/api/media";
 
 type Props = { initialProfile: Profile | null; initialError: "not_found" | "unavailable" | null };
 type Values = {
@@ -29,7 +29,6 @@ type AssetInput = {
   inputId: string;
 };
 
-const MAX_CLIENT_FILE_SIZE = 10 * 1024 * 1024;
 const IMAGE_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
@@ -68,14 +67,14 @@ function fileValidationError(file: File, kind: AssetKind): string | null {
   const allowedTypes = kind === "image" ? "JPG, JPEG, PNG, or WEBP" : "PDF";
   if (!expectedType || file.type !== expectedType) return `Choose a valid ${allowedTypes} file.`;
   if (file.size === 0) return "The selected file is empty.";
-  if (file.size > MAX_CLIENT_FILE_SIZE) return "Files must be 10 MB or smaller.";
+  if (file.size > MAX_ADMIN_UPLOAD_SIZE_BYTES) return "Files must be 4 MB or smaller.";
   return null;
 }
 
 function uploadErrorMessage(error: unknown): string {
   if (error instanceof MediaApiError) {
     if (error.code === "unauthorized") return "Your session may have expired. Sign in again before uploading.";
-    if (error.code === "validation") return "The file was rejected. Check its type, contents, and 10 MB size limit.";
+    if (error.code === "validation") return "The file was rejected. Check its type, contents, and 4 MB size limit.";
     if (error.code === "not_found") return "The media upload route is unavailable. Contact an administrator.";
   }
   return "Upload failed because the connection or media service is unavailable. Try again.";
@@ -332,7 +331,7 @@ function ProfileAssetControl({
       {hasValue ? <Button variant="ghost" disabled={disabled} onClick={() => onRemove(asset.field, asset.kind)}>Remove</Button> : null}
       {asset.kind === "resume" && hasValue ? <a href={value} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center px-3 text-sm text-accent underline-offset-4 hover:underline">View resume</a> : null}
     </div>
-    <p className="text-xs text-ink-muted">{asset.kind === "image" ? "JPG, JPEG, PNG, or WEBP · up to 10 MB" : "PDF · up to 10 MB"}</p>
+    <p className="text-xs text-ink-muted">{asset.kind === "image" ? "JPG, JPEG, PNG, or WEBP · up to 4 MB" : "PDF · up to 4 MB"}</p>
     {uploading ? <p role="status" className="text-sm text-ink-secondary">Uploading {uploadingFilename ?? asset.label.toLowerCase()}…</p> : null}
     {!uploading && filename ? <p className="break-all text-sm text-ink-secondary">Current file: {filename}</p> : null}
     {error ? <p role="alert" className="border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">{error}</p> : null}

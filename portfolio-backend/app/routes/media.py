@@ -1,3 +1,4 @@
+import logging
 from pathlib import PurePath
 from urllib.parse import urlsplit
 
@@ -11,9 +12,11 @@ from app.database import get_db
 from app.models.media import Media
 from app.models.user import User
 from app.schemas.media import MediaCreate, MediaResponse, MediaUpdate
+from app.utils.database_logging import log_database_error
 from app.utils.dependencies import get_current_admin
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 _ALLOWED_FILES = {
     ".jpg": ("image/jpeg", "image", lambda data: data.startswith(b"\xff\xd8\xff")),
@@ -77,6 +80,16 @@ def _database_unavailable() -> HTTPException:
     )
 
 
+def _log_upload_failure(stage: str, status_code: int, error: Exception | None = None) -> None:
+    error_type = type(error).__name__ if error is not None else "none"
+    logger.warning(
+        "media_upload stage=%s status=%d error_type=%s",
+        stage,
+        status_code,
+        error_type,
+    )
+
+
 @router.get("/api/media/{id}", response_model=MediaResponse)
 def get_media(id: int, db: Session = Depends(get_db)) -> Media:
     try:
@@ -133,36 +146,48 @@ def upload_media(
     extension = PurePath(file.filename or "").suffix.lower()
     file_spec = _ALLOWED_FILES.get(extension)
     if file_spec is None:
+        _log_upload_failure("file_validation", status.HTTP_400_BAD_REQUEST)
         raise HTTPException(status_code=400, detail="Unsupported file type")
 
     expected_mime, resource_type, signature_check = file_spec
     if (file.content_type or "").lower() != expected_mime:
+        _log_upload_failure("file_validation", status.HTTP_400_BAD_REQUEST)
         raise HTTPException(status_code=400, detail="File type does not match its extension")
 
     max_bytes = settings.media_max_upload_size_mb * 1024 * 1024
-    content = file.file.read(max_bytes + 1)
+    try:
+        content = file.file.read(max_bytes + 1)
+    except Exception as error:
+        _log_upload_failure("file_read", status.HTTP_500_INTERNAL_SERVER_ERROR, error)
+        raise HTTPException(status_code=500, detail="Media upload failed") from None
     if not content:
+        _log_upload_failure("file_validation", status.HTTP_400_BAD_REQUEST)
         raise HTTPException(status_code=400, detail="File is empty")
     if len(content) > max_bytes:
+        _log_upload_failure("file_validation", status.HTTP_413_CONTENT_TOO_LARGE)
         raise HTTPException(status_code=413, detail="File exceeds the configured size limit")
     if not signature_check(content):
+        _log_upload_failure("file_validation", status.HTTP_400_BAD_REQUEST)
         raise HTTPException(status_code=400, detail="File content does not match its type")
 
     try:
         uploaded = _upload_to_cloudinary(content, resource_type)
-    except RuntimeError:
+    except RuntimeError as error:
+        _log_upload_failure("cloudinary_configuration", status.HTTP_503_SERVICE_UNAVAILABLE, error)
         raise HTTPException(status_code=503, detail="Media storage is not configured") from None
-    except Exception:
+    except Exception as error:
+        _log_upload_failure("cloudinary_upload", status.HTTP_502_BAD_GATEWAY, error)
         raise HTTPException(status_code=502, detail="Media upload failed") from None
 
     public_id = uploaded.get("public_id") if isinstance(uploaded, dict) else None
     file_url = uploaded.get("secure_url") if isinstance(uploaded, dict) else None
     if not public_id or not file_url or not str(file_url).startswith("https://"):
+        _log_upload_failure("cloudinary_response", status.HTTP_502_BAD_GATEWAY)
         if public_id:
             try:
                 _delete_from_cloudinary(str(public_id), resource_type)
-            except Exception:
-                pass
+            except Exception as error:
+                _log_upload_failure("cloudinary_cleanup", status.HTTP_502_BAD_GATEWAY, error)
         raise HTTPException(status_code=502, detail="Media upload failed")
 
     media = Media(
@@ -174,17 +199,22 @@ def upload_media(
     try:
         db.add(media)
         db.commit()
-    except Exception:
+    except Exception as error:
+        _log_upload_failure("database_persistence", status.HTTP_503_SERVICE_UNAVAILABLE, error)
+        if isinstance(error, SQLAlchemyError):
+            log_database_error("media.upload.persist", error)
         db.rollback()
         try:
             _delete_from_cloudinary(str(public_id), resource_type)
-        except Exception:
-            pass
+        except Exception as cleanup_error:
+            _log_upload_failure("cloudinary_cleanup", status.HTTP_502_BAD_GATEWAY, cleanup_error)
         raise _database_unavailable() from None
 
     try:
         db.refresh(media)
-    except SQLAlchemyError:
+    except SQLAlchemyError as error:
+        _log_upload_failure("database_refresh", status.HTTP_503_SERVICE_UNAVAILABLE, error)
+        log_database_error("media.upload.refresh", error)
         db.rollback()
         raise _database_unavailable() from None
     return media

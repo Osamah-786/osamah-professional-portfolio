@@ -1,6 +1,9 @@
 import { createCrudRecord, deleteCrudRecord, listCrudRecords } from "@/lib/api/crud-client";
 export { CrudApiError as MediaApiError } from "@/lib/api/crud-client";
 
+// Keep multipart requests below Vercel Functions' 4.5 MB total request-body limit.
+export const MAX_ADMIN_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
+
 export type Media = {
   id: number;
   file_url: string;

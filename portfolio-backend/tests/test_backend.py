@@ -349,6 +349,35 @@ class MediaUploadTests(unittest.TestCase):
             self.assertEqual(pdf_db_error.exception.status_code, 503)
         self.assertEqual(pdf_cleanup, [("p/file", "image")])
 
+    def test_upload_diagnostics_log_stage_and_status_without_exception_message(self):
+        secret_marker = "provider-error-secret-marker"
+        with patch.object(media, "_upload_to_cloudinary", side_effect=OSError(secret_marker)):
+            with self.assertLogs(media.logger, level="WARNING") as captured:
+                with self.assertRaises(HTTPException) as failed:
+                    media.upload_media(self.File(), None, FakeDB(), User(id=1))
+
+        self.assertEqual(failed.exception.status_code, 502)
+        log_output = "\n".join(captured.output)
+        self.assertIn("stage=cloudinary_upload", log_output)
+        self.assertIn("status=502", log_output)
+        self.assertIn("error_type=OSError", log_output)
+        self.assertNotIn(secret_marker, log_output)
+
+        with patch.object(
+            media,
+            "_upload_to_cloudinary",
+            return_value={"secure_url": "https://cdn.example.test/photo.png", "public_id": "p/photo"},
+        ), patch.object(media, "_delete_from_cloudinary"):
+            with self.assertLogs(media.logger, level="WARNING") as captured:
+                with self.assertRaises(HTTPException) as database_failed:
+                    media.upload_media(self.File(), None, FakeDB(fail_commit=True), User(id=1))
+
+        self.assertEqual(database_failed.exception.status_code, 503)
+        database_log = "\n".join(captured.output)
+        self.assertIn("stage=database_persistence", database_log)
+        self.assertIn("status=503", database_log)
+        self.assertNotIn("mock database failure", database_log)
+
     def test_media_database_crud_and_cloudinary_deletion_policy(self):
         stored = Media(id=8, file_url="https://res.cloudinary.com/demo/raw/upload/v1/portfolio/file.pdf", public_id="portfolio/file.pdf", file_type="application/pdf", alt_text="old")
         update_db = FakeDB(records={(Media, 8): stored})

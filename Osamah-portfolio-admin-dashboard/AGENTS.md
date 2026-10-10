@@ -33,7 +33,7 @@ Before changing code, inspect the relevant existing implementation and API contr
 - Prefer Server Components for data retrieval. Use Client Components for forms/dialogs/interactions only; never place backend token extraction there.
 - Keep admin pages responsive and keyboard accessible; use labels, visible focus, semantic headings, accessible native dialogs, confirmation before destructive operations, and understandable status/error feedback.
 - Include loading, empty, unavailable and mutation states. Never use fabricated portfolio records as a substitute for an API response.
-- Images may be public local or HTTPS URLs; keep secrets out. Media binaries go only to the existing multipart media upload route. The upload form currently caps files at 10 MB, matching the backend default; the backend's `MEDIA_MAX_UPLOAD_SIZE_MB` may be configured up to 100 MB, but the current client intentionally remains stricter. Backend validation is authoritative.
+- Images may be public local or HTTPS URLs; keep secrets out. Media binaries go only to the existing multipart media upload route. Admin upload controls cap files at 4 MB to stay below Vercel Functions' 4.5 MB total request-body limit. The backend's `MEDIA_MAX_UPLOAD_SIZE_MB` defaults to 10 MB and may be configured up to 100 MB; backend validation remains authoritative.
 - Avoid `any`, unnecessary dependencies, duplicate state/data, oversized components and unrelated public-site/backend changes.
 
 ## Environment and security
