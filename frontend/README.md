@@ -50,13 +50,16 @@ Admin uploads send file bytes through an authenticated server-side Next.js handl
 
 ## Environment
 
-Copy `.env.example` to `.env.local` and set the public API base URL:
+Copy `.env.example` to `.env.local`. The API URL is the public FastAPI base URL. The Admin URL sets the footer destination and defaults to the deployed admin login if omitted:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_ADMIN_URL=https://osamah-professional-portfolio-mjul.vercel.app/admin/login
 ```
 
-`NEXT_PUBLIC_API_URL` is browser-visible and must contain only public configuration. Do not put database credentials, JWT signing keys, Cloudinary API credentials, or `ADMIN_SESSION_SECRET` in this application.
+For the production Vercel deployment, set `NEXT_PUBLIC_API_URL=https://osamah-portfolio-api.onrender.com` and `NEXT_PUBLIC_ADMIN_URL=https://osamah-professional-portfolio-mjul.vercel.app/admin/login`. Set these in the Public Frontend Vercel project and create a new deployment after changing them.
+
+Both `NEXT_PUBLIC_*` values are public configuration. Do not put database credentials, JWT signing keys, Cloudinary API credentials, or `ADMIN_SESSION_SECRET` in this application.
 
 ## Development and production commands
 
