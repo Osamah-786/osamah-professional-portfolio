@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { FieldLabel, Input, Textarea } from "@/components/ui/form-controls";
+import { ImageUploadField } from "@/components/admin/content/image-upload-field";
 import type { Project, ProjectInput } from "@/lib/api/projects";
 
 type ProjectFormProps = {
@@ -53,6 +54,7 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [values, setValues] = useState(() => initialValues(project));
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,7 +63,7 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
   }, []);
 
   function close() {
-    if (isSaving) return;
+    if (isSaving || isUploadingImage) return;
     dialogRef.current?.close();
     onClose();
   }
@@ -157,8 +159,7 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
             <Textarea id="project-description" name="description" className="min-h-40" value={values.description} onChange={(event) => update("description", event.target.value)} />
           </div>
           <div className="sm:col-span-2">
-            <FieldLabel htmlFor="project-cover-image">Cover image URL</FieldLabel>
-            <Input id="project-cover-image" name="cover_image" type="url" inputMode="url" placeholder="https://…" value={values.cover_image} onChange={(event) => update("cover_image", event.target.value)} />
+            <ImageUploadField id="project-cover-image" label="Project cover image" value={values.cover_image} disabled={isSaving} onChange={(value) => update("cover_image", value)} onUploadingChange={setIsUploadingImage} />
           </div>
           <div>
             <FieldLabel htmlFor="project-github-url">GitHub URL</FieldLabel>
@@ -180,8 +181,8 @@ export function ProjectForm({ project, onSave, onClose }: ProjectFormProps) {
 
         {error ? <p role="alert" className="mt-5 border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">{error}</p> : null}
         <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row">
-          <Button type="button" onClick={close} disabled={isSaving}>Cancel</Button>
-          <Button type="submit" variant="primary" disabled={isSaving}>{isSaving ? "Saving…" : project ? "Save changes" : "Create project"}</Button>
+          <Button type="button" onClick={close} disabled={isSaving || isUploadingImage}>Cancel</Button>
+          <Button type="submit" variant="primary" disabled={isSaving || isUploadingImage}>{isSaving ? "Saving…" : project ? "Save changes" : "Create project"}</Button>
         </div>
       </form>
     </dialog>

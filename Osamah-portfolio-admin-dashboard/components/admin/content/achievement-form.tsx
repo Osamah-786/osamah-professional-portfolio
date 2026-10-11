@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { FieldLabel, Input, Textarea } from "@/components/ui/form-controls";
+import { ImageUploadField } from "@/components/admin/content/image-upload-field";
 import type { Achievement, AchievementInput } from "@/lib/api/achievements";
 
 type Props = { achievement: Achievement | null; onSave: (input: AchievementInput) => Promise<void>; onClose: () => void };
@@ -23,10 +24,11 @@ export function AchievementForm({ achievement, onSave, onClose }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [values, setValues] = useState(() => initialValues(achievement));
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => { if (dialog.current && !dialog.current.open) dialog.current.showModal(); }, []);
   function update<K extends keyof Values>(key: K, value: Values[K]) { setValues((current) => ({ ...current, [key]: value })); }
-  function close() { if (!saving) { dialog.current?.close(); onClose(); } }
+  function close() { if (!saving && !uploadingImage) { dialog.current?.close(); onClose(); } }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(null);
@@ -51,14 +53,14 @@ export function AchievementForm({ achievement, onSave, onClose }: Props) {
       <div className="grid gap-5 sm:grid-cols-2"><div className="sm:col-span-2"><FieldLabel htmlFor="achievement-title">Title *</FieldLabel><Input id="achievement-title" required maxLength={255} value={values.title} onChange={(event) => update("title", event.target.value)} autoFocus /></div>
         <div className="sm:col-span-2"><FieldLabel htmlFor="achievement-short-description">Short description</FieldLabel><Textarea id="achievement-short-description" maxLength={500} value={values.short_description} onChange={(event) => update("short_description", event.target.value)} /></div>
         <div className="sm:col-span-2"><FieldLabel htmlFor="achievement-description">Description</FieldLabel><Textarea id="achievement-description" className="min-h-36" value={values.description} onChange={(event) => update("description", event.target.value)} /></div>
-        <div className="sm:col-span-2"><FieldLabel htmlFor="achievement-image">Image URL</FieldLabel><Input id="achievement-image" type="url" inputMode="url" maxLength={2048} placeholder="https://…" value={values.image} onChange={(event) => update("image", event.target.value)} /></div>
+        <div className="sm:col-span-2"><ImageUploadField id="achievement-image" label="Achievement image" value={values.image} disabled={saving} onChange={(value) => update("image", value)} onUploadingChange={setUploadingImage} /></div>
         <div className="sm:col-span-2"><FieldLabel htmlFor="achievement-link">External link</FieldLabel><Input id="achievement-link" type="url" inputMode="url" maxLength={2048} placeholder="https://…" value={values.link} onChange={(event) => update("link", event.target.value)} /></div>
         <div><FieldLabel htmlFor="achievement-date">Date</FieldLabel><Input id="achievement-date" type="date" value={values.date} onChange={(event) => update("date", event.target.value)} /></div>
         <div><FieldLabel htmlFor="achievement-order">Display order</FieldLabel><Input id="achievement-order" type="number" step="1" value={values.display_order} onChange={(event) => update("display_order", event.target.value)} /></div>
         <label className="flex min-h-11 items-center gap-3 text-sm text-ink-secondary"><input type="checkbox" checked={values.featured} onChange={(event) => update("featured", event.target.checked)} className="size-4 accent-[var(--color-accent)]" />Feature this achievement</label>
       </div>
       {error ? <p role="alert" className="mt-5 border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">{error}</p> : null}
-      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row"><Button onClick={close} disabled={saving}>Cancel</Button><Button type="submit" variant="primary" disabled={saving}>{saving ? "Saving…" : achievement ? "Save changes" : "Create achievement"}</Button></div>
+      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row"><Button onClick={close} disabled={saving || uploadingImage}>Cancel</Button><Button type="submit" variant="primary" disabled={saving || uploadingImage}>{saving ? "Saving…" : achievement ? "Save changes" : "Create achievement"}</Button></div>
     </form>
   </dialog>;
 }

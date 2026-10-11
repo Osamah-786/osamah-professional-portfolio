@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { FieldLabel, Input, Textarea } from "@/components/ui/form-controls";
+import { ImageUploadField } from "@/components/admin/content/image-upload-field";
 import type { Experience, ExperienceInput } from "@/lib/api/experience";
 
 type Props = { experience: Experience | null; onSave: (input: ExperienceInput) => Promise<void>; onClose: () => void };
@@ -31,10 +32,11 @@ export function ExperienceForm({ experience, onSave, onClose }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [values, setValues] = useState(() => initialValues(experience));
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => { if (dialog.current && !dialog.current.open) dialog.current.showModal(); }, []);
   function update<K extends keyof Values>(key: K, value: Values[K]) { setValues((current) => ({ ...current, [key]: value })); }
-  function close() { if (!saving) { dialog.current?.close(); onClose(); } }
+  function close() { if (!saving && !uploadingImage) { dialog.current?.close(); onClose(); } }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(null);
@@ -65,7 +67,7 @@ export function ExperienceForm({ experience, onSave, onClose }: Props) {
         <div><FieldLabel htmlFor="experience-company">Company *</FieldLabel><Input id="experience-company" required value={values.company} onChange={(e) => update("company", e.target.value)} /></div>
         <div><FieldLabel htmlFor="experience-role">Role *</FieldLabel><Input id="experience-role" required value={values.role} onChange={(e) => update("role", e.target.value)} /></div>
         <div><FieldLabel htmlFor="experience-location">Location</FieldLabel><Input id="experience-location" value={values.location ?? ""} onChange={(e) => update("location", e.target.value)} /></div>
-        <div><FieldLabel htmlFor="experience-logo">Company logo URL</FieldLabel><Input id="experience-logo" type="url" inputMode="url" placeholder="https://…" value={values.company_logo ?? ""} onChange={(e) => update("company_logo", e.target.value)} /></div>
+        <div className="sm:col-span-2"><ImageUploadField id="experience-logo" label="Company logo" value={values.company_logo} disabled={saving} onChange={(value) => update("company_logo", value)} onUploadingChange={setUploadingImage} /></div>
         <div><FieldLabel htmlFor="experience-start">Start date *</FieldLabel><Input id="experience-start" type="date" required value={values.start_date} onChange={(e) => update("start_date", e.target.value)} /></div>
         <div><FieldLabel htmlFor="experience-end">End date {!values.currently_working ? "*" : ""}</FieldLabel><Input id="experience-end" type="date" required={!values.currently_working} disabled={values.currently_working} min={values.start_date || undefined} value={values.currently_working ? "" : values.end_date ?? ""} onChange={(e) => update("end_date", e.target.value)} /></div>
         <label className="flex min-h-11 items-center gap-3 text-sm text-ink-secondary"><input type="checkbox" checked={values.currently_working} onChange={(e) => { update("currently_working", e.target.checked); if (e.target.checked) update("end_date", ""); }} className="size-4 accent-[var(--color-accent)]" />Currently working here</label>
@@ -75,7 +77,7 @@ export function ExperienceForm({ experience, onSave, onClose }: Props) {
         <div className="sm:col-span-2"><FieldLabel htmlFor="experience-description">Description</FieldLabel><Textarea id="experience-description" className="min-h-40" value={values.description ?? ""} onChange={(e) => update("description", e.target.value)} /></div>
       </div>
       {error ? <p role="alert" className="mt-5 border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">{error}</p> : null}
-      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row"><Button onClick={close} disabled={saving}>Cancel</Button><Button type="submit" variant="primary" disabled={saving}>{saving ? "Saving…" : experience ? "Save changes" : "Create experience"}</Button></div>
+      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row"><Button onClick={close} disabled={saving || uploadingImage}>Cancel</Button><Button type="submit" variant="primary" disabled={saving || uploadingImage}>{saving ? "Saving…" : experience ? "Save changes" : "Create experience"}</Button></div>
     </form>
   </dialog>;
 }

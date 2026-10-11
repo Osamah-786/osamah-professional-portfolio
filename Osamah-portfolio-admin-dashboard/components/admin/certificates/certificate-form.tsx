@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { FieldLabel, Input, Textarea } from "@/components/ui/form-controls";
+import { ImageUploadField } from "@/components/admin/content/image-upload-field";
 import type { Certificate, CertificateInput } from "@/lib/api/certificates";
 
 type Props = { certificate: Certificate | null; onSave: (input: CertificateInput) => Promise<void>; onClose: () => void };
@@ -23,10 +24,11 @@ export function CertificateForm({ certificate, onSave, onClose }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [values, setValues] = useState(() => initialValues(certificate));
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => { if (dialog.current && !dialog.current.open) dialog.current.showModal(); }, []);
   function update<K extends keyof Values>(key: K, value: Values[K]) { setValues((current) => ({ ...current, [key]: value })); }
-  function close() { if (!saving) { dialog.current?.close(); onClose(); } }
+  function close() { if (!saving && !uploadingImage) { dialog.current?.close(); onClose(); } }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(null);
@@ -55,14 +57,14 @@ export function CertificateForm({ certificate, onSave, onClose }: Props) {
         <div><FieldLabel htmlFor="certificate-issuer">Issuer *</FieldLabel><Input id="certificate-issuer" required value={values.issuer} onChange={(e) => update("issuer", e.target.value)} /></div>
         <div><FieldLabel htmlFor="certificate-date">Issue date</FieldLabel><Input id="certificate-date" type="date" value={values.issue_date} onChange={(e) => update("issue_date", e.target.value)} /></div>
         <div className="sm:col-span-2"><FieldLabel htmlFor="certificate-credential">Credential URL</FieldLabel><Input id="certificate-credential" type="url" inputMode="url" placeholder="https://…" value={values.credential_url} onChange={(e) => update("credential_url", e.target.value)} /></div>
-        <div className="sm:col-span-2"><FieldLabel htmlFor="certificate-image">Certificate image URL</FieldLabel><Input id="certificate-image" type="url" inputMode="url" placeholder="https://…" value={values.certificate_image} onChange={(e) => update("certificate_image", e.target.value)} /></div>
+        <div className="sm:col-span-2"><ImageUploadField id="certificate-image" label="Certificate image" value={values.certificate_image} disabled={saving} onChange={(value) => update("certificate_image", value)} onUploadingChange={setUploadingImage} /></div>
         <div className="sm:col-span-2"><FieldLabel htmlFor="certificate-file">Certificate file URL</FieldLabel><Input id="certificate-file" type="url" inputMode="url" placeholder="https://…" value={values.certificate_file} onChange={(e) => update("certificate_file", e.target.value)} /></div>
         <div><FieldLabel htmlFor="certificate-order">Display order</FieldLabel><Input id="certificate-order" type="number" step="1" value={values.display_order} onChange={(e) => update("display_order", e.target.value)} /></div>
         <label className="flex min-h-11 items-center gap-3 self-end text-sm text-ink-secondary"><input type="checkbox" checked={values.featured} onChange={(e) => update("featured", e.target.checked)} className="size-4 accent-[var(--color-accent)]" />Feature this certificate</label>
         <div className="sm:col-span-2"><FieldLabel htmlFor="certificate-description">Description</FieldLabel><Textarea id="certificate-description" value={values.description} onChange={(e) => update("description", e.target.value)} /></div>
       </div>
       {error ? <p role="alert" className="mt-5 border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">{error}</p> : null}
-      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row"><Button onClick={close} disabled={saving}>Cancel</Button><Button type="submit" variant="primary" disabled={saving}>{saving ? "Saving…" : certificate ? "Save changes" : "Create certificate"}</Button></div>
+      <div className="mt-7 flex flex-col-reverse justify-end gap-2 border-t border-border pt-5 sm:flex-row"><Button onClick={close} disabled={saving || uploadingImage}>Cancel</Button><Button type="submit" variant="primary" disabled={saving || uploadingImage}>{saving ? "Saving…" : certificate ? "Save changes" : "Create certificate"}</Button></div>
     </form>
   </dialog>;
 }
