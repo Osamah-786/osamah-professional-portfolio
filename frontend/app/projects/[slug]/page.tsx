@@ -70,7 +70,7 @@ function ProjectUnavailable() {
           </Container>
         </Section>
       </main>
-      <PortfolioFooter name={null} socialLinks={[]} />
+      <PortfolioFooter name={null} />
     </>
   );
 }
@@ -231,7 +231,7 @@ export default async function ProjectDetailPage({
         </Section>
       </main>
 
-      <PortfolioFooter name={null} socialLinks={[]} />
+      <PortfolioFooter name={null} />
     </>
   );
 }

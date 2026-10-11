@@ -153,7 +153,7 @@ export default async function ProjectsPage() {
         </Section>
       </main>
 
-      <PortfolioFooter name={null} socialLinks={[]} />
+      <PortfolioFooter name={null} />
     </>
   );
 }

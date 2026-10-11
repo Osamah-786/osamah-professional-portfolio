@@ -193,7 +193,7 @@ export default async function CertificatesPage() {
         </Section>
       </main>
 
-      <PortfolioFooter name={null} socialLinks={[]} />
+      <PortfolioFooter name={null} />
     </>
   );
 }
