@@ -64,17 +64,17 @@ export function Experience({ experiences, unavailable = false }: ExperienceProps
                         ) : null}
                       </div>
                       <div className="flex max-w-3xl items-start gap-4 sm:gap-5">
-                        <div className="relative size-16 shrink-0 overflow-hidden border border-border bg-surface-raised sm:size-[4.5rem]">
+                        <div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden border border-border bg-surface-raised sm:size-24 lg:size-28">
                           {experience.company_logo ? (
                             <ImageWithFallback
                               src={experience.company_logo}
                               alt={`${experience.company} logo`}
-                              sizes="72px"
-                              className="object-contain p-2"
-                              fallback={<span className="flex h-full items-center justify-center font-medium text-ink-secondary">{experience.company.trim().slice(0, 1).toUpperCase()}</span>}
+                              sizes="(max-width: 639px) 80px, (max-width: 1023px) 96px, 112px"
+                              className="object-contain object-center p-2"
+                              fallback={<span className="flex h-full w-full items-center justify-center text-3xl font-semibold text-ink-secondary sm:text-4xl">{experience.company.trim().slice(0, 1).toUpperCase()}</span>}
                             />
                           ) : (
-                            <span aria-hidden="true" className="flex h-full items-center justify-center font-medium text-ink-secondary">
+                            <span aria-hidden="true" className="flex h-full w-full items-center justify-center text-3xl font-semibold text-ink-secondary sm:text-4xl">
                               {experience.company.trim().slice(0, 1).toUpperCase() || "•"}
                             </span>
                           )}

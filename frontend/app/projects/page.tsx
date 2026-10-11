@@ -78,13 +78,13 @@ export default async function ProjectsPage() {
                     <li key={project.id}>
                       <Reveal delay={index * 0.04}>
                         <article className="grid gap-5 py-10 sm:gap-7 sm:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16">
-                          <div className="group relative aspect-[16/10] overflow-hidden border border-border bg-surface">
+                          <div className="group relative aspect-video overflow-hidden border border-border bg-surface-raised">
                             {project.cover_image ? (
                               <ImageWithFallback
                                 src={project.cover_image}
                                 alt={`Project preview for ${project.title}`}
                                 sizes="(max-width: 1023px) 100vw, 50vw"
-                                className="object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+                                className="object-contain object-center transition-opacity duration-500 group-hover:opacity-90"
                                 fallback={<span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">IMAGE UNAVAILABLE</span>}
                               />
                             ) : <span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">NO PROJECT IMAGE</span>}

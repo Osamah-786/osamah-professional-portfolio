@@ -21,8 +21,9 @@ from app.models.project import Project
 from app.models.skill import Skill, SkillCategory
 from app.models.social_link import SocialLink
 from app.models.user import User
-from app.routes import achievements, certificates, experience, media, profile, projects, skills, social_links
+from app.routes import achievements, auth, certificates, experience, media, profile, projects, skills, social_links
 from app.schemas.achievement import AchievementCreate
+from app.schemas.auth import PasswordChangeRequest, UsernameChangeRequest
 from app.schemas.certificate import CertificateCreate
 from app.schemas.experience import ExperienceCreate
 from app.schemas.media import MediaCreate, MediaUpdate
@@ -31,7 +32,7 @@ from app.schemas.project import ProjectCreate, ProjectUpdate
 from app.schemas.skill import SkillCategoryCreate, SkillCreate
 from app.schemas.social_link import SocialLinkCreate
 from app.utils.dependencies import get_current_admin
-from app.utils.security import create_access_token, hash_password
+from app.utils.security import create_access_token, hash_password, verify_password
 
 
 class FakeDB:
@@ -124,7 +125,7 @@ class BackendValidationTests(unittest.TestCase):
     def test_cors_origins_are_explicit_and_middleware_is_scoped(self):
         cors = next(middleware for middleware in app.user_middleware if middleware.cls.__name__ == "CORSMiddleware")
         self.assertEqual(cors.kwargs["allow_origins"], settings.cors_allowed_origins)
-        self.assertEqual(cors.kwargs["allow_methods"], ["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+        self.assertEqual(cors.kwargs["allow_methods"], ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
         self.assertEqual(cors.kwargs["allow_headers"], ["Authorization", "Content-Type"])
         self.assertTrue(cors.kwargs["allow_credentials"])
         configured = Settings(frontend_url="http://localhost:3000,https://preview.example.test/")
@@ -174,6 +175,95 @@ class BackendValidationTests(unittest.TestCase):
         with self.assertRaises(HTTPException) as invalid:
             login(LoginRequest(username="test-admin", password="wrong-test-password"), FakeDB(scalar_results=[user]))
         self.assertEqual(invalid.exception.status_code, 401)
+
+    def test_account_settings_routes_require_authentication(self):
+        paths = app.openapi()["paths"]
+        for path in ("/api/auth/username", "/api/auth/password"):
+            self.assertIn("patch", paths[path])
+            self.assertIn("security", paths[path]["patch"])
+
+    def test_username_change_checks_password_duplicate_and_persists(self):
+        admin = User(id=7, username="old-name", password_hash=hash_password("test-only-current-password"))
+        with self.assertRaises(HTTPException) as wrong_password:
+            auth.change_username(
+                UsernameChangeRequest(current_password="wrong", new_username="new-name", confirm_new_username="new-name"),
+                FakeDB(), admin,
+            )
+        self.assertEqual(wrong_password.exception.status_code, 400)
+
+        duplicate_db = FakeDB(scalar_results=[8])
+        with self.assertRaises(HTTPException) as duplicate:
+            auth.change_username(
+                UsernameChangeRequest(current_password="test-only-current-password", new_username="taken", confirm_new_username="taken"),
+                duplicate_db, admin,
+            )
+        self.assertEqual(duplicate.exception.status_code, 409)
+
+        db = FakeDB(scalar_results=[None])
+        response = auth.change_username(
+            UsernameChangeRequest(current_password="test-only-current-password", new_username="new-name", confirm_new_username="new-name"),
+            db, admin,
+        )
+        self.assertTrue(response.updated)
+        self.assertEqual(admin.username, "new-name")
+        self.assertEqual(db.commits, 1)
+        self.assertTrue(auth.login(auth.LoginRequest(username="new-name", password="test-only-current-password"), FakeDB(scalar_results=[admin])).access_token)
+
+        failed_db = FakeDB(fail_commit=True)
+        with self.assertRaises(HTTPException) as database_error:
+            auth.change_username(
+                UsernameChangeRequest(current_password="test-only-current-password", new_username="other-name", confirm_new_username="other-name"),
+                failed_db, admin,
+            )
+        self.assertEqual(database_error.exception.status_code, 503)
+        self.assertEqual(failed_db.rollbacks, 1)
+
+        with self.assertRaises(ValidationError):
+            UsernameChangeRequest(current_password="x", new_username="one", confirm_new_username="two")
+        with self.assertRaises(ValidationError):
+            UsernameChangeRequest(current_password="x", new_username="   ", confirm_new_username="   ")
+
+    def test_password_change_hash_policy_confirmation_and_old_password_rejection(self):
+        admin = User(id=7, username="test-admin", password_hash=hash_password("test-only-current-password"))
+        with self.assertRaises(ValidationError):
+            PasswordChangeRequest(current_password="x", new_password="short", confirm_new_password="short")
+        with self.assertRaises(ValidationError):
+            PasswordChangeRequest(current_password="x", new_password="long-enough-password", confirm_new_password="different-password")
+        with self.assertRaises(ValidationError):
+            PasswordChangeRequest(current_password="x", new_password="é" * 600, confirm_new_password="é" * 600)
+
+        with self.assertRaises(HTTPException) as incorrect_current:
+            auth.change_password(
+                PasswordChangeRequest(current_password="wrong", new_password="test-only-new-password", confirm_new_password="test-only-new-password"),
+                FakeDB(), admin,
+            )
+        self.assertEqual(incorrect_current.exception.status_code, 400)
+
+        previous_hash = admin.password_hash
+        db = FakeDB()
+        response = auth.change_password(
+            PasswordChangeRequest(current_password="test-only-current-password", new_password="test-only-new-password", confirm_new_password="test-only-new-password"),
+            db, admin,
+        )
+        self.assertTrue(response.updated)
+        self.assertNotEqual(admin.password_hash, previous_hash)
+        self.assertTrue(verify_password("test-only-new-password", admin.password_hash))
+        self.assertFalse(verify_password("test-only-current-password", admin.password_hash))
+        self.assertEqual(db.commits, 1)
+
+        failed_db = FakeDB(fail_commit=True)
+        with self.assertRaises(HTTPException) as database_error:
+            auth.change_password(
+                PasswordChangeRequest(current_password="test-only-current-password", new_password="another-test-password", confirm_new_password="another-test-password"),
+                failed_db, User(id=9, username="db-fail", password_hash=hash_password("test-only-current-password")),
+            )
+        self.assertEqual(database_error.exception.status_code, 503)
+        self.assertEqual(failed_db.rollbacks, 1)
+
+        with self.assertRaises(HTTPException) as old_password_login:
+            auth.login(auth.LoginRequest(username="test-admin", password="test-only-current-password"), FakeDB(scalar_results=[admin]))
+        self.assertEqual(old_password_login.exception.status_code, 401)
+        self.assertTrue(auth.login(auth.LoginRequest(username="test-admin", password="test-only-new-password"), FakeDB(scalar_results=[admin])).access_token)
 
     def test_project_create_duplicate_partial_update_and_missing(self):
         db = FakeDB()

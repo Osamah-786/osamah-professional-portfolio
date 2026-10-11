@@ -1,103 +1,133 @@
 # Osamah Professional Portfolio
 
-A full-stack portfolio and content-management system with a public portfolio, a separate private admin dashboard, and a FastAPI API. Structured content is stored in a MySQL-compatible TiDB Cloud database; uploaded media is stored in Cloudinary.
+A portfolio platform with a public Next.js site, a separate administrator dashboard, and a FastAPI backend. Structured portfolio data is stored in a MySQL-compatible database; uploaded media files are stored in Cloudinary.
+
+## Applications
+
+| Directory | Role | Documentation |
+|---|---|---|
+| `frontend/` | Public portfolio: home, project archive/details, and certificates | [Frontend README](frontend/README.md) |
+| `Osamah-portfolio-admin-dashboard/` | Private CMS, login, and account settings | [Admin README](Osamah-portfolio-admin-dashboard/README.md) |
+| `portfolio-backend/` | FastAPI routes, validation, authentication, persistence, and media integration | [Backend README](portfolio-backend/README.md) |
+| `osamah-portfolio/` | Static design reference; not an application | See its `DESIGN.md` |
 
 ## Architecture
 
 ```mermaid
-flowchart TD
-    Visitor[Public visitor] --> Frontend[Public Next.js on Vercel]
-    Frontend -->|Public API requests| API[FastAPI on Render]
-    AdminUser[Administrator] --> Admin[Admin Next.js on Vercel]
-    Admin -->|Same-origin login and admin handlers| Server[Server-side session and API proxy]
-    Server -->|Bearer JWT, server to server| API
+flowchart LR
+    Visitor[Visitor] --> Public[Public Next.js app<br/>Vercel]
+    Public -->|Unauthenticated public GET requests| API[FastAPI<br/>Render]
+    AdminUser[Administrator] --> Admin[Admin Next.js app<br/>Vercel]
+    Admin -->|Same-origin login and admin handlers| Session[Server-side session and API proxy]
+    Session -->|Bearer JWT, server to server| API
     API --> ORM[SQLAlchemy]
-    ORM --> DB[(TiDB Cloud / MySQL-compatible database)]
-    API -->|Upload and delete| Cloudinary[Cloudinary]
-    API -->|URLs and metadata| DB
+    ORM --> DB[(TiDB Cloud<br/>MySQL-compatible)]
+    API -->|Validated upload and asset deletion| Cloudinary[Cloudinary]
+    API -->|Media URL and metadata| DB
 ```
 
-MySQL stores portfolio records and media references/metadata. Cloudinary stores file bytes. Neither Next.js app connects directly to MySQL or holds Cloudinary API credentials. The admin JWT is held in a signed HttpOnly cookie and forwarded only by server-side code. The cookie is signed, not encrypted.
+This diagram describes the source architecture. The deployed service configuration and live connections have not been fully verified from this repository. The admin session cookie is signed, not encrypted. Its HttpOnly flag prevents browser JavaScript access; JWT extraction and forwarding must remain server-side. Database records store media references and metadata, not file bytes.
 
-## Applications and features
+## Implemented in source
 
-| Directory | Application | Routes / purpose |
-|---|---|---|
-| `frontend/` | Public Next.js portfolio | `/`, `/projects`, `/projects/[slug]`, `/certificates`; typed, API-driven portfolio content. |
-| `Osamah-portfolio-admin-dashboard/` | Private Next.js CMS | `/admin/login`, `/admin`, `/admin/projects`, `/admin/experience`, `/admin/certificates`, `/admin/content`; content management for profile, skills, achievements, social links, and media. `/` redirects to `/admin`. |
-| `portfolio-backend/` | FastAPI API | Public reads, protected admin mutations, authentication, database access, and Cloudinary media handling. |
-| `osamah-portfolio/` | Static design reference | Design assets, not an application. |
+- Public pages retrieve profile, projects, experience, skills, certificates, achievements, and social links from typed backend API functions. Sections handle empty or failed requests independently.
+- The admin dashboard has protected CRUD/content tools for projects, experience, certificates, skills, achievements, profile, social links, and media.
+- Admin account settings change username and password after current-password verification. Password changes expire the dashboard cookie and require login again; backend JWTs are stateless and are not revoked server-side.
+- Authenticated media uploads pass through the admin server handlers and FastAPI to Cloudinary. Supported backend upload formats are JPEG, PNG, WEBP, and PDF; configurable backend size cap defaults to 10 MB. The admin upload control also enforces a 4 MB cap for the Vercel request path.
+- Project cards use fixed landscape frames with contained images; experience logos use larger responsive frames and fallback initials.
 
-Technology includes Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion (public app), Lucide React, FastAPI, Pydantic, SQLAlchemy, PyMySQL, Argon2, JWT, TiDB Cloud, and Cloudinary. See app READMEs for installed dependency ranges and exact commands. Run each application from its own directory; there is no root package project.
-
-## Deployments
-
-| Service | Location |
-|---|---|
-| Public portfolio | Vercel; public production URL is not recorded in this repository. Confirm it in Vercel before publishing a link. |
-| Admin login | [osamah-professional-portfolio-mjul.vercel.app/admin/login](https://osamah-professional-portfolio-mjul.vercel.app/admin/login) |
-| Backend API | [osamah-portfolio-api.onrender.com](https://osamah-portfolio-api.onrender.com) · [OpenAPI docs](https://osamah-portfolio-api.onrender.com/docs) |
-| Database / media | TiDB Cloud / Cloudinary |
-
-Set Vercel Root Directory to `frontend` for the public app and `Osamah-portfolio-admin-dashboard` for admin. For Render use Root Directory `portfolio-backend`, build `pip install -r requirements.txt`, and start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. These are hosting-dashboard settings; no Vercel/Render/Docker/CI deployment config is checked into the repo.
+These are code features, not claims of production availability. See service READMEs for route and validation details.
 
 ## Local development
 
-Provision the database schema separately; the backend has no migration system and creates no tables at startup. Use each app's `.env.example`; never commit `.env` or `.env.local`.
+Each application is independent; run it from its own directory. Use each app's `.env.example` as a template. Never commit `.env` or `.env.local`.
 
-### Backend (PowerShell, from `portfolio-backend/`)
+### Backend (PowerShell, `portfolio-backend/`)
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 Copy-Item .env.example .env
-# Configure local-only database, JWT, CORS, and Cloudinary settings.
+# Configure local database, JWT, CORS, and Cloudinary settings as needed.
 uvicorn app.main:app --reload
 ```
 
-API: `http://localhost:8000`; docs: `/docs`. With schema provisioned, run `python -m app.utils.create_profile` to create a missing neutral profile row (idempotent), and `python -m app.utils.create_admin --username admin` to create an admin; the latter prompts for a password. Check the active environment before running either command.
+The API listens on `http://localhost:8000`, with Swagger at `/docs` and OpenAPI JSON at `/openapi.json`. The backend does not create tables on startup. Follow [backend schema setup](portfolio-backend/README.md#database-and-schema) before making database-backed requests.
 
 ### Public frontend
 
-From `frontend/`: `npm ci`, copy `.env.example` to `.env.local`, set `NEXT_PUBLIC_API_URL` and optionally `NEXT_PUBLIC_ADMIN_URL`, then `npm run dev` (port 3000).
+In `frontend/`, run `npm ci`, copy `.env.example` to `.env.local`, set `NEXT_PUBLIC_API_URL`, then run `npm run dev`. The default port is 3000.
 
 ### Admin dashboard
 
-From `Osamah-portfolio-admin-dashboard/`: `npm ci`, copy `.env.example` to `.env.local`, configure `NEXT_PUBLIC_API_URL` and a unique `ADMIN_SESSION_SECRET`, then `npm run dev -- --port 3001`. Open `http://localhost:3001/admin/login`. Backend `FRONTEND_URL` must include the explicit browser origins used.
+In `Osamah-portfolio-admin-dashboard/`, run `npm ci`, copy `.env.example` to `.env.local`, configure `NEXT_PUBLIC_API_URL` and a unique server-only `ADMIN_SESSION_SECRET`, then run `npm run dev -- --port 3001`. Open `http://localhost:3001/admin/login`.
 
-## Environment and deployment setup
+## Deployment status
 
-Backend variables from `.env.example`: `APP_NAME`, `APP_VERSION`, `DEBUG`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_TLS_MODE`, `JWT_SECRET_KEY`, `JWT_ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `MEDIA_MAX_UPLOAD_SIZE_MB`, `FRONTEND_URL`. Public frontend: `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_ADMIN_URL`. Admin: `NEXT_PUBLIC_API_URL`, `ADMIN_SESSION_SECRET`.
+The repository has no checked-in Vercel, Render, Docker, or CI deployment configuration. Root directories, environment variables, and commands below describe settings to enter in the hosting dashboards; they do not prove what is currently configured there.
 
-Use `MYSQL_TLS_MODE=verify_identity` for TiDB Cloud (certificate and hostname verification); `preferred` is available for local MySQL. For Vercel public, set `NEXT_PUBLIC_API_URL=https://osamah-portfolio-api.onrender.com` and `NEXT_PUBLIC_ADMIN_URL=https://osamah-professional-portfolio-mjul.vercel.app/admin/login`. For admin set the same backend URL and a private `ADMIN_SESSION_SECRET` (at least 32 bytes). Set Render's explicit `FRONTEND_URL` to both deployed app origins and keep JWT, DB, and Cloudinary credentials in Render settings only. Ensure Cloudinary permits PDF delivery if PDFs are used. Deploy each service from its own host project; this README does not deploy anything.
+| Service | Dashboard setting / recorded URL | Verification status |
+|---|---|---|
+| Public Vercel app | Root Directory `frontend` | Project identity, production URL, branch, and deployment status require confirmation in Vercel. |
+| Admin Vercel app | Root Directory `Osamah-portfolio-admin-dashboard`; recorded login URL: [admin login](https://osamah-professional-portfolio-mjul.vercel.app/admin/login) | Project settings and live login require confirmation. |
+| Render API | Root Directory `portfolio-backend`; build `pip install -r requirements.txt`; start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`; recorded API: [osamah-portfolio-api.onrender.com](https://osamah-portfolio-api.onrender.com) | Service name/settings and current health require confirmation. `/docs` is the API docs page; no custom health-check endpoint exists. |
+| Database and media | TiDB Cloud and Cloudinary | Live backend DB/media flow is not verified; see backend README. |
 
-## Validation
+For production, set `NEXT_PUBLIC_API_URL` on each Vercel app to the API base URL; set the public app's optional `NEXT_PUBLIC_ADMIN_URL` to the admin login URL. Configure `ADMIN_SESSION_SECRET` only in the admin server environment. Configure database, JWT, Cloudinary, and explicit CORS-origin values in Render's private environment settings. Never put secrets in `NEXT_PUBLIC_*` variables.
+
+## Environment overview
+
+Exact variables and placeholders are listed in each application's README and `.env.example`:
+
+- Public frontend: `NEXT_PUBLIC_API_URL`, optional `NEXT_PUBLIC_ADMIN_URL` (public values).
+- Admin: `NEXT_PUBLIC_API_URL` (public) and `ADMIN_SESSION_SECRET` (private HMAC secret).
+- Backend: `APP_NAME`, `APP_VERSION`, `DEBUG`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_TLS_MODE`, `JWT_SECRET_KEY`, `JWT_ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `MEDIA_MAX_UPLOAD_SIZE_MB`, and `FRONTEND_URL`.
+
+Use placeholders only in documentation. Never expose secrets from local files, deployment settings, or logs.
+
+## Validation commands
 
 ```powershell
 # Backend, from portfolio-backend/
 python -B -c "from app.main import app; app.openapi()"
 python -B -m unittest discover -v
-# Public frontend, from frontend/ (no package typecheck script)
+
+# Public app, from frontend/
 npx tsc --noEmit
 npm run lint
 npm run build
-# Admin, from Osamah-portfolio-admin-dashboard/
+
+# Admin app, from Osamah-portfolio-admin-dashboard/
 npm run typecheck
 npm run lint
 npm run build
 ```
 
-The backend suite currently has 26 passing tests, using fake DB sessions and mocked provider operations; it does not prove live TiDB or backend-mediated Cloudinary integration. Admin has no test script. Builds/static checks do not verify service connectivity.
+The backend suite uses fake database sessions and mocked provider paths; passing tests do not establish live DB or backend-mediated Cloudinary integration. Both Next apps have no live-service tests. OneDrive builds have encountered `.next` EPERM filesystem errors; see app READMEs for current check results.
 
-## Security and troubleshooting
+## Known limitations and security
 
-- `NEXT_PUBLIC_*` values are browser-visible; never put secrets there. Keep `JWT_SECRET_KEY`, `ADMIN_SESSION_SECRET`, DB credentials, and Cloudinary API credentials private.
-- Admin cookie is HttpOnly, SameSite Strict, Secure in production, and signed but not encrypted. Keep JWT handling server-side.
-- Store binaries in Cloudinary and references/metadata in MySQL, never file bytes in MySQL.
-- If API calls return 503, inspect sanitized Render diagnostics and database settings. A prior repository verification recorded MySQL authentication error 1045; recheck current connectivity.
-- For admin login, verify API URL, admin account, backend availability, and CORS origins; do not bypass auth/CORS.
-- Admin file controls cap uploads at 4 MB for the Vercel function request path; backend defaults to 10 MB, configurable from 1 to 100 MB.
-- Windows/OneDrive `.next` `EPERM` has occurred in this workspace. Check exact path/error; repository notes successful builds from a temporary copy outside OneDrive.
+- The current backend test suite has 29 tests. Previous live DB verification reached MySQL but authentication failed with error 1045; recheck credentials/permissions before relying on production persistence.
+- Direct Cloudinary provider upload/delete was previously verified, but the full backend upload plus database record flow and production uploads remain unverified.
+- The backend includes `portfolio-backend/database/schema.sql` for one-time table provisioning, but no migration system. Startup does not create or migrate schema automatically.
+- Admin JWTs use Argon2 password verification and server-side forwarding. Logout expires the dashboard cookie; no backend token revocation or refresh endpoint exists.
+- Keep database, JWT, session, and Cloudinary credentials private. Avoid JWTs in browser state, HTML, URLs, logs, or client API responses.
+- Do not commit environment files, generated build output, or credentials.
 
-Further detail: [Public README](frontend/README.md) · [Admin README](Osamah-portfolio-admin-dashboard/README.md) · [Backend README](portfolio-backend/README.md).
+## Git review and release
+
+Review changes before staging. After approval, stage only intended files, inspect the staged diff, and commit. Push only to a confirmed deployment branch after confirming the target Vercel/Render projects and monitoring their deployment logs. There is no in-repository CI/release workflow.
+
+```powershell
+git status --short
+git diff --check
+git diff
+git add <approved-paths>
+git diff --cached --check
+git diff --cached
+# After review:
+git commit -m "docs: update portfolio documentation"
+```
+
+Never stage `.env`, `.env.local`, secrets, or generated build output.

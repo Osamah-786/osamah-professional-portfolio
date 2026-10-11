@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   AlertCircle,
+  Settings2,
   UserRoundCog,
   X,
 } from "lucide-react";
@@ -29,6 +30,7 @@ const navigationItems: NavigationItem[] = [
   { href: "/admin/experience", label: "Experience", icon: UserRoundCog },
   { href: "/admin/certificates", label: "Certificates", icon: Award },
   { href: "/admin/content", label: "Content", icon: FileText },
+  { href: "/admin/settings", label: "Account Settings", icon: Settings2 },
 ];
 
 function isActivePath(pathname: string, href: string): boolean {

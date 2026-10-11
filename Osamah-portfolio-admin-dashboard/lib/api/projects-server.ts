@@ -36,7 +36,7 @@ function apiUrl(path: string): URL | null {
 
 export async function callProjectsBackend(
   path: string,
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   body?: unknown,
   diagnosticOperation?: BackendDiagnosticOperation,
 ): Promise<BackendResult> {

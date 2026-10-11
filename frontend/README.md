@@ -1,39 +1,40 @@
 # Public Portfolio
 
-The Public Portfolio is the visitor-facing Next.js application for the Osamah Professional Portfolio. It reads portfolio content from FastAPI and does not connect directly to the database or Cloudinary.
-
-## Routes and features
-
-| Route | Behavior |
-|---|---|
-| `/` | Fetches profile, featured projects, experience, skills/categories, featured certificates, achievements, and social links through typed API functions. Independent requests run concurrently; sections handle empty/unavailable data separately. |
-| `/projects` | Displays backend projects. Detail links use `slug`; live and GitHub URLs remain external. |
-| `/projects/[slug]` | Calls `getProjectBySlug(slug)`; missing records render not-found and API failures have an unavailable state. |
-| `/certificates` | Displays certificates with formatted dates and empty/unavailable handling. |
-
-The responsive design uses graphite/near-black, off-white, a restrained copper accent, thin borders, and editorial typography. Portfolio records are API-driven; section labels and presentation copy are frontend content. Local fallback images are not mock records.
+The public site is a visitor-facing Next.js App Router application. It renders portfolio content from FastAPI and does not connect directly to MySQL or Cloudinary.
 
 ## Stack and structure
 
-- Next.js App Router (`^16.0.0`), React 19, TypeScript 5.
-- Tailwind CSS 4, Framer Motion, Lucide React.
-- `lib/api/`: typed API client and endpoint functions; `types/api.ts`: shared types.
-- `components/`: page sections and shared layout/UI.
-- `public/images/`: local visuals/fallbacks.
-- `next.config.ts` permits HTTPS images at `res.cloudinary.com`.
+- Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, Framer Motion, and Lucide React.
+- `app/` contains App Router pages; `components/` contains page sections and shared UI; `lib/api/` contains typed API calls; `types/api.ts` defines response types.
+- `next.config.ts` allows remote images from `res.cloudinary.com`.
 
-Pages use Server Components for data fetching where possible. `lib/api/client.ts` uses `NEXT_PUBLIC_API_URL`, disables fetch caching for API reads, and maps network/HTTP/JSON/shape failures into the API error abstraction.
+## Routes and dynamic content
+
+| Route | Current behavior |
+|---|---|
+| `/` | Concurrently loads profile, featured projects, experience, skills/categories, featured certificates, achievements, and social links. Each section handles unavailable or empty data independently. |
+| `/projects` | Displays the project archive returned by the backend. |
+| `/projects/[slug]` | Fetches a project by slug; missing entries render not-found. |
+| `/certificates` | Displays backend certificates with empty and unavailable states. |
+
+Content records are API-driven. Layout, labels, and presentation copy are frontend content, and local fallback assets do not represent mock portfolio records.
+
+## Image presentation
+
+Featured and archive project cards use fixed 16:9 image containers, centered `object-fit: contain` images, neutral dark surfaces, and responsive widths. Featured lead and supporting cards keep their intentional different widths while retaining consistent image framing. `ImageWithFallback` preserves alt text and shows a fallback when an image fails.
+
+Experience logos are centered and contained in responsive 80–112px frames, with company initials as an on-error fallback. Certificate and achievement artwork uses contained imagery and fallback presentation. Social link logos load from their configured URL and fall back to a platform icon. Profile and resume image references are delivered by the backend/Cloudinary; the site does not upload files.
 
 ## Environment
 
 Copy `.env.example` to `.env.local`:
 
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_ADMIN_URL=https://osamah-professional-portfolio-mjul.vercel.app/admin/login
-```
+| Variable | Use | Required | Exposure | Example |
+|---|---|---|---|---|
+| `NEXT_PUBLIC_API_URL` | Base URL for FastAPI public reads | Yes for live content | Public | `http://localhost:8000` |
+| `NEXT_PUBLIC_ADMIN_URL` | Footer link to admin login; source has a default if omitted | No | Public | `https://<admin-domain>/admin/login` |
 
-For production use `NEXT_PUBLIC_API_URL=https://osamah-portfolio-api.onrender.com`. `NEXT_PUBLIC_ADMIN_URL` configures the footer Admin link and defaults to the admin URL above when missing. Both variables are public configuration. Do not put credentials, database settings, JWT secrets, Cloudinary secrets, or `ADMIN_SESSION_SECRET` here.
+Production API URL recorded in project docs: `https://osamah-portfolio-api.onrender.com`. This value and the admin URL are configuration references; current production availability has not been confirmed. Do not place secrets in either variable.
 
 ## Install and run
 
@@ -42,37 +43,32 @@ From `frontend/` in PowerShell:
 ```powershell
 npm ci
 Copy-Item .env.example .env.local
-# Configure NEXT_PUBLIC_API_URL for the intended backend.
+# Set NEXT_PUBLIC_API_URL for the backend you intend to use.
 npm run dev
 ```
 
-The dev server defaults to `http://localhost:3000`.
-
-## Commands
+The development server defaults to `http://localhost:3000`.
 
 | Command | Purpose |
 |---|---|
-| `npm run dev` | `next dev --webpack` |
-| `npx tsc --noEmit` | TypeScript check; no package typecheck script exists. |
-| `npm run lint` | `eslint .` |
-| `npm run build` | `next build --webpack` |
-| `npm start` | Start after a production build. |
+| `npm run dev` | Next.js development server with Webpack. |
+| `npx tsc --noEmit` | TypeScript check; there is no package `typecheck` script. |
+| `npm run lint` | Runs `eslint .` |
+| `npm run build` | Production build with Webpack. |
+| `npm start` | Serves a completed production build. |
 
-## Vercel deployment
+## Vercel
 
-Use the public frontend Vercel project and set **Root Directory** to `frontend`. Configure:
+Use the public portfolio Vercel project and set **Root Directory** to `frontend`. The project ID/name, linked Git repository, production branch, custom domain, and current deployment status are not recorded in source and must be checked in Vercel.
 
-```text
-NEXT_PUBLIC_API_URL=https://osamah-portfolio-api.onrender.com
-NEXT_PUBLIC_ADMIN_URL=https://osamah-professional-portfolio-mjul.vercel.app/admin/login
-```
+Configure `NEXT_PUBLIC_API_URL` to the intended backend base URL. `NEXT_PUBLIC_ADMIN_URL` may point to the admin login. These `NEXT_PUBLIC_*` settings are browser-visible and must contain no credentials. Add the deployed public site's exact origin to backend `FRONTEND_URL` if browser requests require CORS.
 
-The public production URL is not recorded in this repository; confirm it from Vercel before sharing. Add the public site's browser origin to backend `FRONTEND_URL` where CORS is required. No Vercel project configuration is checked in; these are dashboard settings.
+There is no checked-in Vercel project configuration. A Vercel deployment is verified only after the dashboard reports it ready and the deployed route/API behavior is checked.
 
-## Resume and media
+## Troubleshooting and limits
 
-The Home page uses `profile.resume_url` directly in a new tab; it does not fetch the PDF, create a Blob, or use a custom viewer. Inline display depends on Cloudinary PDF delivery configuration and response headers. Images may be local or public HTTPS Cloudinary URLs. New PDF uploads use Cloudinary resource type `image`; backend deletion supports legacy `raw` PDFs.
-
-## Validation and limitations
-
-Run `npx tsc --noEmit`, `npm run lint`, and `npm run build`. These do not verify live API, database, Cloudinary, or PDF response behavior. Backend schema provisioning and credentials are external to this app. Windows/OneDrive `.next` `EPERM` has occurred; check the exact error rather than changing architecture around the filesystem issue.
+- **Missing/delayed content:** verify `NEXT_PUBLIC_API_URL` and backend reachability. The page uses independent section requests; an API failure may affect one section only.
+- **Missing remote image:** check that the URL is valid and HTTPS, the host is permitted by Next image configuration, and the backend record points to the intended asset. Fallback behavior does not repair a bad URL.
+- **Build errors:** run commands from `frontend/` and inspect the exact error. Windows/OneDrive has produced `.next` EPERM filesystem failures in this workspace.
+- **PDF resume:** the site links to the configured URL; inline display depends on Cloudinary PDF delivery and response headers. The frontend does not process or upload the PDF.
+- **Verification boundary:** TypeScript, lint, and build checks do not establish live API, database, image-provider, or deployment behavior.

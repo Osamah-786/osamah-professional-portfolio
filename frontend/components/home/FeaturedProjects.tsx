@@ -16,13 +16,13 @@ type FeaturedProjectsProps = {
 
 function ProjectImage({ src, title, sizes }: { src: string | null; title: string; sizes: string }) {
   return (
-    <div className="relative aspect-[16/10] overflow-hidden border border-border bg-surface">
+    <div className="relative aspect-video overflow-hidden border border-border bg-surface-raised">
       {src ? (
         <ImageWithFallback
           src={src}
           alt={`Project preview for ${title}`}
           sizes={sizes}
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.015]"
+          className="object-contain object-center transition-opacity duration-300 group-hover:opacity-90"
           fallback={<span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">IMAGE UNAVAILABLE</span>}
         />
       ) : <span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">NO PROJECT IMAGE</span>}
