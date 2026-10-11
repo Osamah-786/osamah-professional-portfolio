@@ -26,6 +26,9 @@ function uploadErrorMessage(error: unknown): string {
     if (error.code === "unauthorized") return "Your session may have expired. Sign in again before uploading.";
     if (error.code === "validation") return "The image was rejected. Check the file type, contents, and 4 MB size limit.";
     if (error.code === "not_found") return "The media upload route is unavailable. Contact an administrator.";
+    if (error.code === "conflict") return "The upload conflicted with an existing media record. Try again or contact an administrator.";
+    if (error.code === "invalid_response") return "The upload service returned an unreadable response. Try again later.";
+    if (error.code === "unavailable") return "The upload service is unavailable. Check media storage configuration and try again later.";
   }
   return "Image upload failed. Check media storage availability and try again.";
 }

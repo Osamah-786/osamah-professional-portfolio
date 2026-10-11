@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
 import { PortfolioFooter } from "@/components/layout/PortfolioFooter";
@@ -10,6 +9,7 @@ import { Divider } from "@/components/ui/Divider";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { publicNavigationLinks } from "@/components/layout/public-navigation";
 import { ApiError } from "@/lib/api/client";
 import { getProjects } from "@/lib/api/projects";
@@ -72,31 +72,25 @@ export default async function ProjectsPage() {
             {projects.length > 0 ? (
               <ol className="m-0 list-none p-0">
                 {projects.map((project, index) => {
-                  const imagePlacement = index % 2 === 0
-                    ? "lg:col-start-6 lg:row-start-1"
-                    : "lg:col-start-1 lg:row-start-1";
-                  const copyPlacement = index % 2 === 0
-                    ? "lg:col-start-1 lg:row-start-1"
-                    : "lg:col-start-8 lg:row-start-1";
                   const description = project.short_description ?? project.description;
 
                   return (
                     <li key={project.id}>
                       <Reveal delay={index * 0.04}>
-                        <article className="grid items-center gap-7 py-10 sm:gap-9 sm:py-14 lg:grid-cols-12 lg:gap-10 lg:py-20">
-                          <div className={`group relative aspect-[16/10] overflow-hidden border border-border bg-surface ${imagePlacement} lg:col-span-7`}>
+                        <article className="grid gap-5 py-10 sm:gap-7 sm:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16">
+                          <div className="group relative aspect-[16/10] overflow-hidden border border-border bg-surface">
                             {project.cover_image ? (
-                              <Image
+                              <ImageWithFallback
                                 src={project.cover_image}
                                 alt={`Project preview for ${project.title}`}
-                                fill
-                                sizes="(max-width: 1023px) 100vw, 58vw"
+                                sizes="(max-width: 1023px) 100vw, 50vw"
                                 className="object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+                                fallback={<span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">IMAGE UNAVAILABLE</span>}
                               />
-                            ) : null}
+                            ) : <span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">NO PROJECT IMAGE</span>}
                           </div>
 
-                          <div className={`min-w-0 ${copyPlacement} lg:col-span-5`}>
+                          <div className="min-w-0 lg:py-2">
                             <div className="flex flex-wrap items-center gap-3 font-mono text-[0.68rem] tracking-[0.08em] text-ink-muted">
                               <span>{String(index + 1).padStart(2, "0")} / PROJECT</span>
                               {project.featured ? <Badge tone="accent">FEATURED</Badge> : null}

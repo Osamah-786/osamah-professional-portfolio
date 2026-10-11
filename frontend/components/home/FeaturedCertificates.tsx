@@ -1,12 +1,11 @@
-import Image from "next/image";
 import { ArrowRight, ArrowUpRight, FileText } from "lucide-react";
 import type { Certificate } from "@/types/api";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { Divider } from "@/components/ui/Divider";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 type FeaturedCertificatesProps = {
   certificates: readonly Certificate[];
@@ -36,29 +35,27 @@ export function FeaturedCertificates({ certificates }: FeaturedCertificatesProps
           />
 
           {certificates.length > 0 ? (
-            <ol className="mt-9">
+            <ol className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {certificates.map((certificate, index) => {
                 const issueDate = formatIssueDate(certificate.issue_date);
 
                 return (
                   <li key={certificate.id}>
-                    <article className="grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-4 py-5 sm:grid-cols-[2.5rem_5rem_minmax(0,1fr)_auto] sm:gap-x-6">
-                      <span className="row-span-2 self-start pt-1 font-mono text-xs text-ink-muted">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      {certificate.certificate_image ? (
-                        <div className="relative row-span-2 hidden aspect-[4/5] w-16 overflow-hidden border border-border bg-surface sm:block sm:w-20">
-                          <Image
+                    <article className="h-full border-t border-border pt-3">
+                      <figure className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border border-border bg-surface">
+                        {certificate.certificate_image ? (
+                          <ImageWithFallback
                             src={certificate.certificate_image}
                             alt={`Certificate preview: ${certificate.title}`}
-                            fill
-                            sizes="80px"
-                            className="object-contain p-1"
+                            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                            className="object-contain p-3"
+                            fallback={<span className="font-mono text-[0.65rem] tracking-[0.08em] text-ink-muted">PREVIEW UNAVAILABLE</span>}
                           />
-                        </div>
-                      ) : null}
-                      <div className="min-w-0">
-                        <h3 className="break-words text-base font-medium leading-snug sm:text-lg">
+                        ) : <FileText size={24} strokeWidth={1.25} className="text-ink-muted" aria-hidden="true" />}
+                      </figure>
+                      <div className="min-w-0 pt-4">
+                        <p className="font-mono text-[0.65rem] tracking-[0.07em] text-ink-muted">{String(index + 1).padStart(2, "0")}</p>
+                        <h3 className="mt-2 break-words text-base font-medium leading-snug sm:text-lg">
                           {certificate.title}
                         </h3>
                         {certificate.issuer ? (
@@ -70,7 +67,7 @@ export function FeaturedCertificates({ certificates }: FeaturedCertificatesProps
                           </p>
                         ) : null}
                       </div>
-                      <div className="col-start-2 mt-2 flex flex-wrap items-center justify-between gap-3 font-mono text-[0.68rem] tracking-[0.05em] text-ink-muted sm:col-start-4 sm:row-start-1 sm:mt-0 sm:justify-end">
+                      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-3 font-mono text-[0.68rem] tracking-[0.05em] text-ink-muted">
                         {issueDate ? <span>{issueDate}</span> : null}
                         {certificate.credential_url ? (
                           <a
@@ -95,7 +92,6 @@ export function FeaturedCertificates({ certificates }: FeaturedCertificatesProps
                         ) : null}
                       </div>
                     </article>
-                    {index < certificates.length - 1 ? <Divider /> : null}
                   </li>
                 );
               })}

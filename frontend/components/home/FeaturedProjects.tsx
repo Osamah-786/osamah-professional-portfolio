@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import type { Project } from "@/types/api";
@@ -8,6 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 type FeaturedProjectsProps = {
   projects: readonly Project[];
@@ -18,14 +18,14 @@ function ProjectImage({ src, title, sizes }: { src: string | null; title: string
   return (
     <div className="relative aspect-[16/10] overflow-hidden border border-border bg-surface">
       {src ? (
-        <Image
+        <ImageWithFallback
           src={src}
           alt={`Project preview for ${title}`}
-          fill
           sizes={sizes}
           className="object-cover transition-transform duration-300 group-hover:scale-[1.015]"
+          fallback={<span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">IMAGE UNAVAILABLE</span>}
         />
-      ) : null}
+      ) : <span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">NO PROJECT IMAGE</span>}
     </div>
   );
 }
@@ -101,18 +101,18 @@ export function FeaturedProjects({ projects, unavailable = false }: FeaturedProj
               </article>
 
               {secondaryProjects.length > 0 ? (
-                <div className="flex min-w-0 flex-col lg:col-span-5">
+                <div className="grid min-w-0 gap-5 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
                   {secondaryProjects.map((project, index) => (
                     <article
                       key={project.id}
-                      className="group grid grid-cols-[minmax(6.5rem,0.8fr)_minmax(0,1.2fr)] gap-4 border-t border-border py-5 first:pt-4 last:border-b sm:gap-5"
+                      className="group min-w-0 border-t border-border pt-4"
                     >
                       <ProjectImage
                         src={project.cover_image}
                         title={project.title}
-                        sizes="(max-width: 639px) 40vw, (max-width: 1023px) 30vw, 16vw"
+                        sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 40vw"
                       />
-                      <div className="min-w-0">
+                      <div className="min-w-0 pt-4">
                         <p className="font-mono text-[0.65rem] tracking-[0.08em] text-ink-muted">
                           {String(index + 2).padStart(2, "0")} / SUPPORTING PROJECT
                         </p>

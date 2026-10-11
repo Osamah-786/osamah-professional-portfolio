@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, FileText } from "lucide-react";
 import type { Metadata } from "next";
@@ -10,6 +9,7 @@ import { Divider } from "@/components/ui/Divider";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { publicNavigationLinks } from "@/components/layout/public-navigation";
 import { ApiError } from "@/lib/api/client";
 import { getCertificates } from "@/lib/api/certificates";
@@ -102,16 +102,32 @@ export default async function CertificatesPage() {
                 No certificates available yet.
               </p>
             ) : (
-              <ol className="m-0 list-none p-0">
+              <ol className="m-0 grid list-none gap-6 p-0 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
                 {records.map((certificate, index) => {
                   const issueDate = formatIssueDate(certificate.issue_date);
                   const hasActions = certificate.credential_url || certificate.certificate_file;
 
                   return (
-                    <li key={certificate.id}>
+                    <li key={certificate.id} className="min-w-0">
                       <Reveal delay={index * 0.04}>
-                        <article className="grid gap-7 py-9 sm:gap-9 sm:py-12 lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-14">
-                          <div className="min-w-0 lg:col-span-7">
+                        <article className="h-full border-t border-border pt-4">
+                          <figure className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden border border-border bg-surface">
+                            {certificate.certificate_image ? (
+                              <ImageWithFallback
+                                src={certificate.certificate_image}
+                                alt={`Certificate: ${certificate.title}${certificate.issuer ? `, issued by ${certificate.issuer}` : ""}`}
+                                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                                className="object-contain p-3 sm:p-5"
+                                fallback={<span className="font-mono text-[0.65rem] tracking-[0.08em] text-ink-muted">PREVIEW UNAVAILABLE</span>}
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center gap-3 text-ink-muted">
+                                <FileText size={26} strokeWidth={1.25} aria-hidden="true" />
+                                <span className="font-mono text-[0.65rem] tracking-[0.08em]">NO PREVIEW AVAILABLE</span>
+                              </div>
+                            )}
+                          </figure>
+                          <div className="min-w-0 pt-5">
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] tracking-[0.07em] text-ink-muted">
                               <span>{String(index + 1).padStart(2, "0")}</span>
                               {issueDate ? (
@@ -166,28 +182,8 @@ export default async function CertificatesPage() {
                               </div>
                             ) : null}
                           </div>
-
-                          <figure className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden border border-border bg-surface lg:col-span-4 lg:col-start-9">
-                            {certificate.certificate_image ? (
-                              <Image
-                                src={certificate.certificate_image}
-                                alt={`Certificate: ${certificate.title}${certificate.issuer ? `, issued by ${certificate.issuer}` : ""}`}
-                                fill
-                                sizes="(max-width: 1023px) 100vw, 36vw"
-                                className="object-contain p-3 sm:p-5"
-                              />
-                            ) : (
-                              <div className="flex flex-col items-center gap-3 text-ink-muted">
-                                <FileText size={26} strokeWidth={1.25} aria-hidden="true" />
-                                <span className="font-mono text-[0.65rem] tracking-[0.08em]">
-                                  NO PREVIEW AVAILABLE
-                                </span>
-                              </div>
-                            )}
-                          </figure>
                         </article>
                       </Reveal>
-                      {index < records.length - 1 ? <Divider /> : null}
                     </li>
                   );
                 })}

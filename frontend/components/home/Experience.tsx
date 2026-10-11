@@ -1,10 +1,10 @@
-import Image from "next/image";
 import type { Experience as ExperienceRecord } from "@/types/api";
 import { Container } from "@/components/ui/Container";
 import { Divider } from "@/components/ui/Divider";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 type ExperienceProps = {
   experiences: readonly ExperienceRecord[];
@@ -63,21 +63,27 @@ export function Experience({ experiences, unavailable = false }: ExperienceProps
                           <p className="mt-2 text-sm text-ink-muted">{experience.location}</p>
                         ) : null}
                       </div>
-                      <div className="flex max-w-3xl gap-4">
-                        {experience.company_logo ? (
-                          <Image
-                            src={experience.company_logo}
-                            alt=""
-                            width={40}
-                            height={40}
-                            className="size-10 shrink-0 border border-border bg-surface object-contain p-1"
-                          />
-                        ) : null}
+                      <div className="flex max-w-3xl items-start gap-4 sm:gap-5">
+                        <div className="relative size-16 shrink-0 overflow-hidden border border-border bg-surface-raised sm:size-[4.5rem]">
+                          {experience.company_logo ? (
+                            <ImageWithFallback
+                              src={experience.company_logo}
+                              alt={`${experience.company} logo`}
+                              sizes="72px"
+                              className="object-contain p-2"
+                              fallback={<span className="flex h-full items-center justify-center font-medium text-ink-secondary">{experience.company.trim().slice(0, 1).toUpperCase()}</span>}
+                            />
+                          ) : (
+                            <span aria-hidden="true" className="flex h-full items-center justify-center font-medium text-ink-secondary">
+                              {experience.company.trim().slice(0, 1).toUpperCase() || "•"}
+                            </span>
+                          )}
+                        </div>
                         <div className="min-w-0">
-                          <h3 className="break-words text-xl font-medium tracking-tight sm:text-2xl">
+                          <p className="break-words text-sm font-medium text-ink-secondary">{experience.company}</p>
+                          <h3 className="mt-1 break-words text-xl font-medium tracking-tight sm:text-2xl">
                             {experience.role}
                           </h3>
-                          <p className="mt-1 text-sm text-ink-secondary">{experience.company}</p>
                           {description ? (
                             <p className="mt-3 text-sm leading-6 text-ink-muted sm:text-base sm:leading-7">
                               {description}

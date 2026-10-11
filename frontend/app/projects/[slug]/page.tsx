@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cache } from "react";
 import { ArrowLeft, ArrowUpRight, Github } from "lucide-react";
@@ -13,6 +12,7 @@ import { Divider } from "@/components/ui/Divider";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { publicNavigationLinks } from "@/components/layout/public-navigation";
 import { ApiError } from "@/lib/api/client";
 import { getProjectBySlug } from "@/lib/api/projects";
@@ -144,15 +144,15 @@ export default async function ProjectDetailPage({
           <Reveal>
             <figure className="relative aspect-[16/9] overflow-hidden border-y border-border bg-surface sm:aspect-[2/1]">
               {project.cover_image ? (
-                <Image
+                <ImageWithFallback
                   src={project.cover_image}
                   alt={`Visual preview of ${project.title}`}
-                  fill
-                  priority
                   sizes="(max-width: 1023px) 100vw, 1200px"
                   className="object-cover"
+                  priority
+                  fallback={<span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">IMAGE UNAVAILABLE</span>}
                 />
-              ) : null}
+              ) : <span className="flex h-full items-center justify-center font-mono text-xs tracking-[0.08em] text-ink-muted">NO PROJECT IMAGE</span>}
             </figure>
           </Reveal>
         </Container>
