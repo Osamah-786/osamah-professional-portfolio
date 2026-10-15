@@ -4,6 +4,14 @@ from app.schemas.certificate import CertificateCreate, CertificateResponse, Cert
 from app.schemas.experience import ExperienceCreate, ExperienceResponse, ExperienceUpdate
 from app.schemas.media import MediaCreate, MediaResponse
 from app.schemas.profile import ProfileCreate, ProfileResponse, ProfileUpdate
+from app.schemas.portfolio_section import (
+    PublicSectionResponse,
+    SectionCreate,
+    SectionDuplicateRequest,
+    SectionReorderRequest,
+    SectionResponse,
+    SectionUpdate,
+)
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
 from app.schemas.skill import (
     SkillCategoryCreate,
@@ -31,6 +39,12 @@ __all__ = [
     "ProfileCreate",
     "ProfileResponse",
     "ProfileUpdate",
+    "PublicSectionResponse",
+    "SectionCreate",
+    "SectionDuplicateRequest",
+    "SectionReorderRequest",
+    "SectionResponse",
+    "SectionUpdate",
     "ProjectCreate",
     "ProjectResponse",
     "ProjectUpdate",

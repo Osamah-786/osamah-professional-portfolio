@@ -44,6 +44,11 @@ Interactive docs are `/docs` and OpenAPI JSON is `/openapi.json`. There is no cu
 | `GET /api/profile` | Public | Read the first profile row; 404 if absent. |
 | `PUT /api/admin/profile` | Admin | Update the existing first profile row; does not create one. |
 | `GET /api/media/{id}` | Public | Read media metadata. |
+| `GET /api/sections?placement=home\|full` | Public | Read ordered enabled, published sections visible in the requested placement. |
+| `GET /api/sections/{slug}` | Public | Read a published full-page section with Read More enabled. |
+| `/api/admin/sections` and `/api/admin/sections/{id}` | Admin JWT | Create, list, update, and delete section configuration. Built-in deletion is rejected. |
+| `POST /api/admin/sections/{id}/duplicate` | Admin JWT | Duplicate a configuration as a draft. |
+| `PUT /api/admin/sections/reorder` | Admin JWT | Reorder all section entries. |
 | `GET /api/admin/media` | Admin | List media metadata, newest first. |
 | `POST /api/admin/media` | Admin | Register external media metadata; no upload. |
 | `POST /api/admin/media/upload` | Admin | Upload multipart `file` and optional `alt_text` to Cloudinary and store metadata. |
@@ -53,13 +58,13 @@ Create routes return 201, deletes return 204, and missing records return 404. Da
 
 ## Models and database
 
-Models cover users, projects, experiences, certificates, skill categories, skills, achievements, social links, profiles, and media. Category/skill relationship constraints are enforced by the existing schema and database relationship. Profile API behavior is singleton-style (first row by ascending ID); the database does not enforce a singleton key.
+Models cover users, projects, experiences, certificates, skill categories, skills, achievements, social links, profiles, media, and the portfolio section registry. Category/skill relationship constraints are enforced by the existing schema and database relationship. Profile API behavior is singleton-style (first row by ascending ID); the database does not enforce a singleton key.
 
 The engine uses `URL.create(...)` for PyMySQL connection construction, hides SQL parameters, and enables pool pre-ping. For TLS mode `verify_identity`, it uses Python's default SSL context to validate CA and hostname and recycles pooled connections every 300 seconds. `preferred` is the default and is intended for local MySQL compatibility.
 
 ### Schema provisioning
 
-The backend does **not** call `Base.metadata.create_all()` or create tables at startup. There is no migration tool. `database/schema.sql` provides one-time `CREATE TABLE IF NOT EXISTS` statements for `portfolio_db`; it initializes absent tables but is not a migration and does not update an existing schema. Review it and provision the intended database deliberately before starting the app. There is no automatic production schema setup.
+The backend does **not** call `Base.metadata.create_all()` or create tables at startup. There is no automated migration runner. `database/schema.sql` provides initial `CREATE TABLE IF NOT EXISTS` statements for `portfolio_db`; it initializes absent tables but does not update an existing schema. The Section Builder also has a separate manual SQL migration at `database/migrations/001_create_portfolio_sections.sql` for existing databases. Back up and review the relevant SQL before applying it. There is no automatic production schema setup.
 
 For TiDB Cloud, create/select the cluster and database in TiDB Cloud, retrieve the MySQL-compatible host, port, user, and password from the cluster's connection dialog, then set the `MYSQL_*` values in Render. Use `MYSQL_TLS_MODE=verify_identity`. See [TiDB Cloud connection guidance](https://docs.pingcap.com/tidbcloud/connect-to-tidb-cluster-serverless/?plan=starter). Never place actual connection details in this README. To diagnose connection errors, confirm cluster availability, database name, user grants, outbound access, TLS mode, and that no stale connection values are configured. Error 1045 indicates MySQL authentication/authorization failure, not a schema migration.
 
@@ -145,7 +150,9 @@ python -B -c "from app.main import app; app.openapi()"
 python -B -m unittest discover -v
 ```
 
-The current suite has 29 tests and uses fake database sessions and mocked provider paths. It does not verify live TiDB persistence, DB-backed authentication, or the complete backend media/Cloudinary/database flow.
+The current suite has 31 tests and uses fake database sessions and mocked provider paths. It does not verify live TiDB persistence, DB-backed authentication, or the complete backend media/Cloudinary/database flow.
+
+The Section Builder adds `portfolio_sections`. Provision new databases from `database/schema.sql`; existing databases must apply `database/migrations/001_create_portfolio_sections.sql` manually. Its idempotent seed references existing content without copying it. See [the Section Builder guide](../docs/section-builder.md). Startup does not create or migrate tables.
 
 ## Render deployment
 
@@ -160,5 +167,5 @@ For deployment issues, inspect Render startup logs without printing secrets, con
 - Local backend import and mocked/unit checks are distinct from live service verification.
 - Previous DB check reached MySQL but received error 1045; current TiDB authentication and real CRUD remain unverified.
 - Direct Cloudinary provider ping/upload/delete previously succeeded, but backend-authenticated upload plus DB persistence and production uploads remain unverified.
-- There are no migrations or startup table creation. Review `database/schema.sql` before initial provisioning; it will not upgrade existing schema.
+- There is no automated migration runner or startup table creation. Review `database/schema.sql` before initial provisioning; apply the Section Builder SQL migration manually to an existing database as described above.
 - No Docker, CI/CD, or deployment manifest is checked in.

@@ -58,6 +58,11 @@ export function Hero({ profile, profileUnavailable, socialLinks }: HeroProps) {
                     Resume <ArrowUpRight size={14} aria-hidden="true" />
                   </Button>
                 ) : null}
+                {profile ? (
+                  <Button href="/about" variant="text">
+                    Read more <ArrowRight size={15} aria-hidden="true" />
+                  </Button>
+                ) : null}
               </div>
 
               <SocialLinks links={socialLinks} className="mt-8" />

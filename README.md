@@ -6,10 +6,17 @@ A portfolio platform with a public Next.js site, a separate administrator dashbo
 
 | Directory | Role | Documentation |
 |---|---|---|
-| `frontend/` | Public portfolio: home, project archive/details, and certificates | [Frontend README](frontend/README.md) |
+| `frontend/` | Public portfolio: home, full profile (`/about`), project archive/details, and certificates | [Frontend README](frontend/README.md) |
 | `Osamah-portfolio-admin-dashboard/` | Private CMS, login, and account settings | [Admin README](Osamah-portfolio-admin-dashboard/README.md) |
 | `portfolio-backend/` | FastAPI routes, validation, authentication, persistence, and media integration | [Backend README](portfolio-backend/README.md) |
 | `osamah-portfolio/` | Static design reference; not an application | See its `DESIGN.md` |
+
+## Technology
+
+- Public site and admin CMS: Next.js 16, React 19, TypeScript, Tailwind CSS 4.
+- API: FastAPI, Pydantic Settings, SQLAlchemy, and PyMySQL.
+- Data: MySQL-compatible TiDB Cloud; media files: Cloudinary.
+- Authentication: JWT and Argon2 in the backend; signed HttpOnly session cookie in the admin server.
 
 ## Architecture
 
@@ -31,12 +38,16 @@ This diagram describes the source architecture. The deployed service configurati
 ## Implemented in source
 
 - Public pages retrieve profile, projects, experience, skills, certificates, achievements, and social links from typed backend API functions. Sections handle empty or failed requests independently.
+- The homepage introduction and `/about` profile use the admin-editable `short_bio` and `full_bio` fields. The profile page composes available experience, projects, skills, certificates, achievements, and social links; Education is omitted because no education model or API exists.
 - The admin dashboard has protected CRUD/content tools for projects, experience, certificates, skills, achievements, profile, social links, and media.
+- The Section Builder manages a database-backed registry for built-in sections and custom block-based sections. It controls publication, visibility, and order; custom sections render at `/sections/[slug]`. Apply the backend SQL migration first; see [the Section Builder guide](docs/section-builder.md). Existing built-in records are referenced, not copied.
 - Admin account settings change username and password after current-password verification. Password changes expire the dashboard cookie and require login again; backend JWTs are stateless and are not revoked server-side.
 - Authenticated media uploads pass through the admin server handlers and FastAPI to Cloudinary. Supported backend upload formats are JPEG, PNG, WEBP, and PDF; configurable backend size cap defaults to 10 MB. The admin upload control also enforces a 4 MB cap for the Vercel request path.
 - Project cards use fixed landscape frames with contained images; experience logos use larger responsive frames and fallback initials.
 
 These are code features, not claims of production availability. See service READMEs for route and validation details.
+
+The backend Swagger UI is available at `/docs` and its OpenAPI document at `/openapi.json` when the API is running. The backend README contains the route inventory; service setup and deployment references are linked above. The Section Builder's manual schema change and limitations are documented in [the Section Builder guide](docs/section-builder.md).
 
 ## Local development
 
@@ -53,7 +64,7 @@ Copy-Item .env.example .env
 uvicorn app.main:app --reload
 ```
 
-The API listens on `http://localhost:8000`, with Swagger at `/docs` and OpenAPI JSON at `/openapi.json`. The backend does not create tables on startup. Follow [backend schema setup](portfolio-backend/README.md#database-and-schema) before making database-backed requests.
+The API listens on `http://localhost:8000`, with Swagger at `/docs` and OpenAPI JSON at `/openapi.json`. The backend does not create tables on startup. Follow [backend schema setup](portfolio-backend/README.md#schema-provisioning) before making database-backed requests.
 
 ### Public frontend
 
@@ -75,6 +86,8 @@ The repository has no checked-in Vercel, Render, Docker, or CI deployment config
 | Database and media | TiDB Cloud and Cloudinary | Live backend DB/media flow is not verified; see backend README. |
 
 For production, set `NEXT_PUBLIC_API_URL` on each Vercel app to the API base URL; set the public app's optional `NEXT_PUBLIC_ADMIN_URL` to the admin login URL. Configure `ADMIN_SESSION_SECRET` only in the admin server environment. Configure database, JWT, Cloudinary, and explicit CORS-origin values in Render's private environment settings. Never put secrets in `NEXT_PUBLIC_*` variables.
+
+The service READMEs provide per-service dashboard settings and smoke-check guidance: [public Vercel app](frontend/README.md#vercel), [admin Vercel app](Osamah-portfolio-admin-dashboard/README.md#vercel-deployment), and [Render API](portfolio-backend/README.md#render-deployment). These are deployment instructions, not confirmation of current dashboard configuration.
 
 ## Environment overview
 
@@ -106,14 +119,18 @@ npm run build
 
 The backend suite uses fake database sessions and mocked provider paths; passing tests do not establish live DB or backend-mediated Cloudinary integration. Both Next apps have no live-service tests. OneDrive builds have encountered `.next` EPERM filesystem errors; see app READMEs for current check results.
 
+After a build is available, verify the public pages, admin login and protected routes, backend `/docs`, and database-backed operations separately. Check the relevant hosting dashboard and logs for deployment status; local checks do not verify production.
+
 ## Known limitations and security
 
-- The current backend test suite has 29 tests. Previous live DB verification reached MySQL but authentication failed with error 1045; recheck credentials/permissions before relying on production persistence.
+- The current backend test suite has 31 tests. Previous live DB verification reached MySQL but authentication failed with error 1045; recheck credentials/permissions before relying on production persistence.
 - Direct Cloudinary provider upload/delete was previously verified, but the full backend upload plus database record flow and production uploads remain unverified.
-- The backend includes `portfolio-backend/database/schema.sql` for one-time table provisioning, but no migration system. Startup does not create or migrate schema automatically.
+- The backend includes `portfolio-backend/database/schema.sql` for initial provisioning and a manual Section Builder migration at `portfolio-backend/database/migrations/001_create_portfolio_sections.sql`. There is no automated migration runner; startup does not create or migrate schema automatically. Back up the database and follow the [Section Builder guide](docs/section-builder.md) before applying that migration to an existing database.
 - Admin JWTs use Argon2 password verification and server-side forwarding. Logout expires the dashboard cookie; no backend token revocation or refresh endpoint exists.
 - Keep database, JWT, session, and Cloudinary credentials private. Avoid JWTs in browser state, HTML, URLs, logs, or client API responses.
 - Do not commit environment files, generated build output, or credentials.
+
+The static design reference in `osamah-portfolio/` is not part of the build or deployment workflow; preserve it as reference material.
 
 ## Git review and release
 

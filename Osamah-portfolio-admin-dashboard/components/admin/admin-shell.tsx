@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  PanelsTopLeft,
   AlertCircle,
   Settings2,
   UserRoundCog,
@@ -29,6 +30,7 @@ const navigationItems: NavigationItem[] = [
   { href: "/admin/projects", label: "Projects", icon: BriefcaseBusiness },
   { href: "/admin/experience", label: "Experience", icon: UserRoundCog },
   { href: "/admin/certificates", label: "Certificates", icon: Award },
+  { href: "/admin/sections", label: "Section Builder", icon: PanelsTopLeft },
   { href: "/admin/content", label: "Content", icon: FileText },
   { href: "/admin/settings", label: "Account Settings", icon: Settings2 },
 ];

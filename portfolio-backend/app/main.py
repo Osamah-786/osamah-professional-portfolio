@@ -11,6 +11,7 @@ from app.routes.projects import router as projects_router
 from app.routes.profile import router as profile_router
 from app.routes.skills import router as skills_router
 from app.routes.social_links import router as social_links_router
+from app.routes.sections import router as sections_router
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
 app.add_middleware(
@@ -29,3 +30,4 @@ app.include_router(achievements_router, tags=["Achievements"])
 app.include_router(social_links_router, tags=["Social Links"])
 app.include_router(profile_router, tags=["Profile"])
 app.include_router(media_router, tags=["Media"])
+app.include_router(sections_router, tags=["Sections"])

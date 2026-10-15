@@ -14,8 +14,11 @@ The Admin Dashboard is a separate Next.js application for maintaining the portfo
 | `/admin/certificates` | Protected | Certificate management. |
 | `/admin/content` | Protected | Profile, skills/categories, achievements, social links, and media tools. |
 | `/admin/settings` | Protected | Change the authenticated administrator's username or password. |
+| `/admin/sections` | Protected | Configure section order, visibility, status, and custom section content. |
 
 These screens and handlers are implemented in source. Their presence does not prove live API, database, or Cloudinary availability.
+
+The Section Builder uses authenticated same-origin handlers under `/api/admin/sections`. Apply `portfolio-backend/database/migrations/001_create_portfolio_sections.sql` before using it. Custom blocks and field definitions are edited as JSON; image values reference assets uploaded through the existing Media manager. See [the Section Builder guide](../docs/section-builder.md).
 
 ## Authentication and session
 
@@ -34,7 +37,9 @@ The protected settings page offers separate username and password forms. Both re
 
 Admin API handlers use same-origin paths and server-only session forwarding. They validate the session, enforce same-origin checks on writes, and sanitize errors/responses. Do not call protected backend routes directly from browser components.
 
-Managed content includes projects, experience, certificates, profile, skill categories/skills, achievements, social links, and media. The exact backend methods and payload contracts are in [the backend API inventory](../portfolio-backend/README.md#api-inventory).
+Managed content includes projects, experience, certificates, profile, skill categories/skills, achievements, social links, media, and section configuration. The exact backend methods and payload contracts are in [the backend API inventory](../portfolio-backend/README.md#api-and-openapi).
+
+The Profile editor already provides separate **Short bio** and **Full bio** fields. The public homepage uses the short bio, while the public `/about` page uses the full bio and combines it with available portfolio records. Saving uses the existing authenticated `PUT /api/admin/profile` endpoint; no profile-specific migration is needed.
 
 Reusable image inputs provide previews and replace/remove controls. For project, experience, certificate, achievement, and social-link image fields, browser upload validation accepts JPG/JPEG/PNG/WEBP up to 4 MiB per file. Social-link logos also support an image URL/reference mode. Clearing an image field clears the form value; saving the record persists that change and does not itself delete the old Cloudinary asset.
 
@@ -78,9 +83,9 @@ There is no admin unit-test script. Static checks do not verify login, CRUD, or 
 
 ## Vercel deployment
 
-Use the separate admin Vercel project and set **Root Directory** to `Osamah-portfolio-admin-dashboard`. The project name/ID, linked repository, production branch, and current deployment state require confirmation in Vercel. A login URL recorded in project docs is [osamah-professional-portfolio-mjul.vercel.app/admin/login](https://osamah-professional-portfolio-mjul.vercel.app/admin/login); verify that it is current before relying on it.
+Use the separate admin Vercel project and set **Root Directory** to `Osamah-portfolio-admin-dashboard`. The project name `osamah-professional-portfolio-mjul` and login URL [osamah-professional-portfolio-mjul.vercel.app/admin/login](https://osamah-professional-portfolio-mjul.vercel.app/admin/login) are recorded in project documentation, but project ID, linked repository, production branch, dashboard settings, and current deployment state require confirmation in Vercel.
 
-Set `NEXT_PUBLIC_API_URL` to the intended FastAPI URL and set a unique `ADMIN_SESSION_SECRET` (at least 32 bytes) in Vercel's private server environment settings. Never expose it through `NEXT_PUBLIC_*`. Add both public and admin app origins as explicit backend `FRONTEND_URL` entries when required. No Vercel deployment configuration is checked in; confirm build and deployment status in the dashboard.
+Set `NEXT_PUBLIC_API_URL` to the intended FastAPI URL and set a unique `ADMIN_SESSION_SECRET` (at least 32 bytes) in Vercel's private server environment settings. Never expose it through `NEXT_PUBLIC_*`. Add both public and admin app origins as explicit backend `FRONTEND_URL` entries when required. No Vercel deployment configuration is checked in. Confirm the framework/build settings and deployment branch in the dashboard, then verify login, logout, protected routes, API operations, and uploads against the deployed services.
 
 ## Troubleshooting
 
